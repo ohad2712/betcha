@@ -1,0 +1,22 @@
+{
+	"connections": [{
+    "host": "0.0.0.0",
+    "port": 9797,
+    "routes": {
+      "files": {
+        "relativeTo": "./app"
+      },
+      "cors": true,
+      "payload": { 
+        "maxBytes": 154857600 
+      }
+    }
+	}],
+  "registrations": [{
+    "plugin": {
+      "register": "../../..",
+      "options": {
+      }
+    }
+  }]
+}
