@@ -16,6 +16,7 @@
     "plugin": {
       "register": "../../..",
       "options": {
+        "db": "mongodb://localhost:27017/betcha_dev"
       }
     }
   }]
