@@ -7,6 +7,7 @@ export const AppDataSource = new DataSource({
   synchronize: true, // Set to false in production
   logging: true,
   entities: [User],
+  database: "betcha"
 });
 
 AppDataSource.initialize()

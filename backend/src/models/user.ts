@@ -13,7 +13,7 @@ interface UserAttributes {
 interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 
 // Extend the Model class
-export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;
   public username!: string;
   public password!: string;
@@ -45,3 +45,5 @@ User.init(
     modelName: 'User',
   }
 );
+
+export { User };

@@ -48,8 +48,5 @@ Gameweek.init(
   }
 );
 
-// Define associations
-Gameweek.hasMany(Match, { foreignKey: 'gameweekId', as: 'Matches' });
-Gameweek.hasMany(Guess, { foreignKey: 'gameweekId', as: 'Guesses' });
 
 export { Gameweek };

@@ -1,6 +1,7 @@
 import Redis from 'ioredis';
 
-const redis = new Redis(process.env.REDIS_URL);
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redis = new Redis(redisUrl);
 
 export const setCache = async (key: string, value: any, expire: number) => {
   await redis.set(key, JSON.stringify(value), 'EX', expire);

@@ -1,24 +1,24 @@
 {
   "development": {
-    "username": "ohad",
+    "username": "",
     "password": null,
-    "database": "db_dev",
+    "database": "betcha",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"
   },
   "test": {
-    "username": "ohad",
+    "username": "",
     "password": null,
-    "database": "db_test",
+    "database": "betcha_test",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"
   },
   "production": {
-    "username": "ohad",
+    "username": "",
     "password": null,
-    "database": "db_prod",
+    "database": "betcha_prod",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"

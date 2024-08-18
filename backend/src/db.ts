@@ -1,7 +1,9 @@
 import { Sequelize } from 'sequelize';
 
-// Create a new instance of Sequelize
-export const sequelize = new Sequelize('db_dev', 'ohad', '', {
-  host: '127.0.0.1',
+// Initialize Sequelize
+const sequelize = new Sequelize(process.env.DATABASE_URL || "postgresql://localhost:5432/betcha", {
   dialect: 'postgres',
+  logging: false, // Set to true to see SQL queries
 });
+
+export { sequelize };

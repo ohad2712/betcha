@@ -9,6 +9,8 @@ import gameweekRoutes from './routes/gameweek';
 import seasonRoutes from './routes/season';
 import cupRoutes from './routes/cup';
 import { errorHandler } from './middleware/errorHandler';
+import { User, Guess, Gameweek, Match } from './models'; // Import models
+
 
 dotenv.config();
 
@@ -31,6 +33,7 @@ app.use(errorHandler);
 
 // Initialize database and start server
 sequelize.sync({ force: false }).then(() => {
+  console.log("Database synced");
   app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port ${process.env.PORT || 3000}`);
   });

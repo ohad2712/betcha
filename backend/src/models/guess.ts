@@ -9,11 +9,11 @@ class Guess extends Model {
   public id!: number;
   public userId!: number;
   public gameweekId!: number;
+  public matchId!: number;
   public exact!: boolean;
   public correctDirection!: boolean;
   public homeGoals!: number;
   public awayGoals!: number;
-  public matchId!: number;
 }
 
 // Initialize the model
@@ -25,6 +25,10 @@ Guess.init(
       primaryKey: true,
     },
     userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    matchId: {  
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -48,10 +52,6 @@ Guess.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    matchId: {  
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
   },
   {
     sequelize,
@@ -59,9 +59,5 @@ Guess.init(
   }
 );
 
-// Define associations
-Guess.belongsTo(Gameweek, { foreignKey: 'gameweekId', as: 'Gameweek' });
-Guess.belongsTo(Match, { foreignKey: 'matchId', as: 'Match' });
-Guess.belongsTo(User, { foreignKey: 'userId', as: 'User' });
 
 export { Guess };

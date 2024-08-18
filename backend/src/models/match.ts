@@ -48,8 +48,4 @@ Match.init(
   }
 );
 
-// Define associations
-Match.belongsTo(Gameweek, { foreignKey: 'gameweekId', as: 'Gameweek' });
-Match.hasMany(Guess, { foreignKey: 'matchId', as: 'Guesses' });
-
 export { Match };
