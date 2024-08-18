@@ -1,35 +1,19 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+// models/guess.ts
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../db';
-import { User } from './user';
+import { Gameweek } from './gameweek';
 import { Match } from './match';
+import { User } from './user';
 
-// Define Guess attributes
-interface GuessAttributes {
-  id: number;
-  userId: number;
-  gameweek: string;
-  exact: boolean;
-  correctDirection: boolean;
-  homeGoals: number;  // Add homeGoals
-  awayGoals: number;  // Add awayGoals
-}
-
-// Define Guess creation attributes
-interface GuessCreationAttributes extends Optional<GuessAttributes, 'id'> {}
-
-// Extend the Model class
-export class Guess extends Model<GuessAttributes, GuessCreationAttributes> implements GuessAttributes {
+class Guess extends Model {
   public id!: number;
   public userId!: number;
-  public gameweek!: string;
+  public gameweekId!: number;
   public exact!: boolean;
   public correctDirection!: boolean;
-  public homeGoals!: number;  // Add homeGoals
-  public awayGoals!: number;  // Add awayGoals
-  
-  // Define associations
-  public readonly User?: User;
-  public readonly Match?: Match;
+  public homeGoals!: number;
+  public awayGoals!: number;
+  public matchId!: number;
 }
 
 // Initialize the model
@@ -44,8 +28,8 @@ Guess.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    gameweek: {
-      type: DataTypes.STRING,
+    gameweekId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     exact: {
@@ -56,11 +40,15 @@ Guess.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
-    homeGoals: {  // Add homeGoals
+    homeGoals: {  
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    awayGoals: {  // Add awayGoals
+    awayGoals: {  
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    matchId: {  
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -72,8 +60,8 @@ Guess.init(
 );
 
 // Define associations
+Guess.belongsTo(Gameweek, { foreignKey: 'gameweekId', as: 'Gameweek' });
+Guess.belongsTo(Match, { foreignKey: 'matchId', as: 'Match' });
 Guess.belongsTo(User, { foreignKey: 'userId', as: 'User' });
-User.hasMany(Guess, { foreignKey: 'userId' });
 
-Guess.belongsTo(Match, { foreignKey: 'gameweek', as: 'Match' });
-Match.hasMany(Guess, { foreignKey: 'gameweek' });
+export { Guess };

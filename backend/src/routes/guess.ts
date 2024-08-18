@@ -6,7 +6,7 @@ const router = Router();
 
 router.post('/:matchId', authenticate, async (req, res) => {
   const { matchId } = req.params;
-  const { homeGoals, awayGoals } = req.body;
+  const { homeGoals, awayGoals, exact, correctDirection } = req.body;
   
   // Check if req.user is defined
   const userId = req.user?.id;
@@ -21,6 +21,8 @@ router.post('/:matchId', authenticate, async (req, res) => {
       matchId: Number(matchId),  // Ensure matchId is a number
       homeGoals,
       awayGoals,
+      correctDirection,
+      exact
     });
 
     res.status(201).json(guess);
@@ -29,6 +31,5 @@ router.post('/:matchId', authenticate, async (req, res) => {
     res.status(500).json({ error: 'Failed to save guess' });
   }
 });
-
 
 export default router;

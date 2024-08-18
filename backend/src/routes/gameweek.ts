@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { Guess } from '../models/guess';
 import { User } from '../models/user';
+import { Match } from '../models/match';
 import { authenticate } from '../middleware/authenticate';
 
 const router = Router();
@@ -11,18 +12,34 @@ interface UserStats {
   totalPoints: number;
 }
 
+// Define an interface to include Match in Guess
+interface GuessWithMatch extends Guess {
+  Match: Match;
+  User: User;
+}
+
 router.get('/stats', authenticate, async (req, res) => {
   try {
     const gameweek = Array.isArray(req.query.gameweek) ? req.query.gameweek[0] : req.query.gameweek;
-    
+
     if (!gameweek || typeof gameweek !== 'string') {
       return res.status(400).json({ error: 'Invalid gameweek parameter' });
     }
-    
+
+    // Query to filter guesses based on the match's gameweek
     const guesses = await Guess.findAll({
-      where: { gameweek },
-      include: [{ model: User, as: 'User' }],
-    });
+      include: [
+        {
+          model: User,
+          as: 'User',
+        },
+        {
+          model: Match,
+          as: 'Match',
+          where: { gameweek: Number(gameweek) },
+        },
+      ],
+    }) as GuessWithMatch[];
 
     const stats: { [userId: number]: UserStats } = {};
 
@@ -31,7 +48,7 @@ router.get('/stats', authenticate, async (req, res) => {
       if (!stats[userId]) {
         stats[userId] = { exactGuesses: 0, directionGuesses: 0, totalPoints: 0 };
       }
-      
+
       const matchResult = guess.Match;
       if (!matchResult) continue;
 
@@ -59,16 +76,24 @@ router.get('/current', authenticate, async (req, res) => {
     const currentGameweek = 'current_gameweek'; // This should be dynamic in a real application
 
     const guesses = await Guess.findAll({
-      where: { gameweek: currentGameweek },
-      include: [{ model: User, as: 'User' }],
-    });
+      include: [
+        {
+          model: User,
+          as: 'User',
+        },
+        {
+          model: Match,
+          as: 'Match',
+          where: { gameweek: Number(currentGameweek) },
+        },
+      ],
+    }) as GuessWithMatch[];
 
     const stats: { [userId: number]: { username: string; exactGuesses: number; directionGuesses: number; totalPoints: number } } = {};
 
     for (const guess of guesses) {
       const userId = guess.userId;
       if (!stats[userId]) {
-        // Ensure that guess.User is defined before accessing properties
         const username = guess.User ? guess.User.username : 'Unknown User'; // Fallback username
         stats[userId] = {
           username,

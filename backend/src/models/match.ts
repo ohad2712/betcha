@@ -1,32 +1,44 @@
+// models/match.ts
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../db';
+import { Gameweek } from './gameweek';
+import { Guess } from './guess';
 
-// Define Match attributes
-export class Match extends Model {
-  public gameweek!: number;
-  public homeGoals!: number;  // Add homeGoals
-  public awayGoals!: number;  // Add awayGoals
-  public matches!: any;
+class Match extends Model {
+  public id!: number;
+  public gameweekId!: number;
+  public homeGoals!: number;
+  public awayGoals!: number;
+  public homeTeam!: string;
+  public awayTeam!: string;
 }
 
 // Initialize the model
 Match.init(
   {
-    gameweek: {
+    id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: true,
+      autoIncrement: true,
+      primaryKey: true,
     },
-    homeGoals: { // Add homeGoals
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    awayGoals: { // Add awayGoals
+    gameweekId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    matches: {
-      type: DataTypes.JSONB,
+    homeGoals: {  
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    awayGoals: {  
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    homeTeam: {  
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    awayTeam: {  
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
@@ -35,3 +47,9 @@ Match.init(
     modelName: 'Match',
   }
 );
+
+// Define associations
+Match.belongsTo(Gameweek, { foreignKey: 'gameweekId', as: 'Gameweek' });
+Match.hasMany(Guess, { foreignKey: 'matchId', as: 'Guesses' });
+
+export { Match };
