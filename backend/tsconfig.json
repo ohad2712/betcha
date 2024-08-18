@@ -10,7 +10,9 @@
     "baseUrl": "./src",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "outDir": "./dist", // or your preferred output directory
+    "rootDir": "./src"
   },
   "include": ["src/**/*"]
 }
