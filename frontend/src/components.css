@@ -1,0 +1,112 @@
+/* Home Component */
+.home .match-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .home .match-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #fff;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .home .match-item img {
+    height: 30px;
+    width: 30px;
+    margin-right: 1rem;
+  }
+  
+  .home .guess-input {
+    display: flex;
+    align-items: center;
+  }
+  
+  .home .guess-input input {
+    width: 50px;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .home .save-message {
+    display: none;
+    color: green;
+    margin-left: 1rem;
+  }
+  
+  /* Adjust for mobile screens */
+  @media (max-width: 600px) {
+    .home .match-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .home .guess-input {
+      width: 100%;
+      justify-content: space-between;
+    }
+  
+    .home .guess-input input {
+      width: calc(50% - 1rem);
+    }
+  }
+  
+  /* Settings Component */
+  .settings {
+    padding: 1rem;
+  }
+  
+  .settings .user-info {
+    margin-bottom: 2rem;
+  }
+  
+  .settings .rules {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .settings .logout-button {
+    background-color: #dc3545;
+    margin-top: 1rem;
+  }
+  
+  .settings .logout-button:hover {
+    background-color: #c82333;
+  }
+  
+  /* Tables (Overall, Gameweek, and Cup) */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-container th, .table-container td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table-container th {
+    background-color: #f8f8f8;
+  }
+  
+  @media (max-width: 600px) {
+    .table-container th, .table-container td {
+      padding: 0.5rem;
+    }
+  }
+  

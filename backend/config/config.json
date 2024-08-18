@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "ohad",
+    "password": null,
+    "database": "db_dev",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "ohad",
+    "password": null,
+    "database": "db_test",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "ohad",
+    "password": null,
+    "database": "db_prod",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  }
+}
