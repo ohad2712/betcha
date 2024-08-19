@@ -38,7 +38,7 @@ const Home = () => {
     }));
 
     // Implement debounced save
-    setTimeout(() => saveGuesses(matchId), 3000);
+    setTimeout(() => saveGuesses(matchId), 3000); // TODO: Add this to config
   };
 
   const saveGuesses = async (matchId: number) => {
@@ -64,14 +64,14 @@ const Home = () => {
               type="number"
               value={guesses[match.id]?.homeGoals || ''}
               onChange={(e) => handleGuessChange(match.id, 'home', Number(e.target.value))}
-              disabled={/* Add condition to disable if past deadline */}
+              disabled={false} /* Add condition to disable if past deadline */
             />
             -
             <input
               type="number"
               value={guesses[match.id]?.awayGoals || ''}
               onChange={(e) => handleGuessChange(match.id, 'away', Number(e.target.value))}
-              disabled={/* Add condition to disable if past deadline */}
+              disabled={false} /* Add condition to disable if past deadline */
             />
           </li>
         ))}

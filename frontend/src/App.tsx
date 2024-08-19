@@ -7,19 +7,16 @@ import Cup from './components/Cup';
 import Settings from './components/Settings';
 import UserProvider from './UserContext';
 
-
 const App: React.FC = () => {
   return (
     <UserProvider>
-      <Router>
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/this-gameweek" element={<ThisGameweek />} />
-          <Route path="/overall-table" element={<OverallTable />} />
-          <Route path="/cup" element={<Cup />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/this-gameweek" element={<ThisGameweek />} />
+        <Route path="/overall-table" element={<OverallTable />} />
+        <Route path="/cup" element={<Cup />} />
+        <Route path="/settings" element={<Settings />} />
+      </Routes>
     </UserProvider>
   );
 };

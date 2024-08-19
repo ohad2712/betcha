@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 interface UserStats {
+  username: string;
   championships: number;
   cupWins: number;
 }

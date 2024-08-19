@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -10,9 +10,15 @@ interface UserContextProps {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
+// Create a context with default null value
 export const UserContext = createContext<UserContextProps | null>(null);
 
-const UserProvider: React.FC = ({ children }) => {
+// Define the props for the UserProvider component
+interface UserProviderProps {
+  children: ReactNode; // ReactNode includes anything that can be rendered
+}
+
+const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
   return (
