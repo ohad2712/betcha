@@ -3,16 +3,16 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { sequelize } from './db';
 
+import authRoutes from './routes/auth';
 import matchRoutes from './routes/matches';
 import guessRoutes from './routes/guess';
 import gameweekRoutes from './routes/gameweek';
 import seasonRoutes from './routes/season';
 import cupRoutes from './routes/cup';
-import settingsRoutes from './routes/settings';
+import settingsRoutes from './routes/auth';
 
 import { errorHandler } from './middleware/errorHandler';
 import { User, Guess, Gameweek, Match } from './models'; // Import models
-
 
 dotenv.config();
 
@@ -23,6 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/guesses', guessRoutes);
 app.use('/api/gameweek', gameweekRoutes);
