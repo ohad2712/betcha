@@ -9,7 +9,6 @@ const BottomNav: React.FC = () => {
       <Link to="/this-gameweek" className="nav-item">This Gameweek</Link>
       <Link to="/overall-table" className="nav-item">Overall Table</Link>
       <Link to="/cup" className="nav-item">Cup</Link>
-      <Link to="/settings" className="nav-item">Settings</Link>
     </div>
   );
 };
