@@ -14,16 +14,28 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    login: (state: any, action: any) => {
+    login: (state, action) => {
       state.isAuthenticated = true;
       state.username = action.payload.username;
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('username', action.payload.username);
     },
-    logout: (state:any) => {
+    logout: (state) => {
       state.isAuthenticated = false;
       state.username = null;
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('username');
+    },
+    hydrate: (state) => {
+      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      const username = localStorage.getItem('username');
+      if (isAuthenticated && username) {
+        state.isAuthenticated = isAuthenticated;
+        state.username = username;
+      }
     },
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, hydrate } = userSlice.actions;
 export default userSlice.reducer;

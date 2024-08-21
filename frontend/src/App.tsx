@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import ThisGameweek from './components/ThisGameweek';
@@ -9,8 +9,16 @@ import Login from './components/Login';
 import Register from './components/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserProvider from './UserContext';
+import { useDispatch } from 'react-redux';
+import { hydrate } from './store/userSlice';
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(hydrate());
+  }, [dispatch]);
+  
   return (
     <UserProvider>
       <Routes>
