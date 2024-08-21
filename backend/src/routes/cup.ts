@@ -6,6 +6,7 @@ import { Includeable } from 'sequelize';
 
 const router = Router();
 
+// TODO: make this configurable and available for both frontend and backend parts
 const SEMI_FINAL_GWS = ['8', '14', '21', '27'];
 const FINAL_GWS = ['30', '35', '38'];
 

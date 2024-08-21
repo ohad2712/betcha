@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+// TODO: make this configurable and available for both frontend and backend parts
+const SEMI_FINAL_GWS = ['8', '14', '21', '27'];
+const FINAL_GWS = ['30', '35', '38'];
+
+
 interface CupMatch {
   username: string;
   gameweekPoints: number[];
@@ -39,10 +44,9 @@ const Cup: React.FC = () => {
         <thead>
           <tr>
             <th>Username</th>
-            <th>GW 8</th>
-            <th>GW 14</th>
-            <th>GW 21</th>
-            <th>GW 27</th>
+            {SEMI_FINAL_GWS.map((gw) => (
+              <th>GW {gw}</th>
+            ))}
             <th>Total</th>
           </tr>
         </thead>
@@ -64,9 +68,9 @@ const Cup: React.FC = () => {
         <thead>
           <tr>
             <th>Username</th>
-            <th>GW 30</th>
-            <th>GW 35</th>
-            <th>GW 38</th>
+            {FINAL_GWS.map((gw) => (
+              <th>GW {gw}</th>
+            ))}
             <th>Total</th>
           </tr>
         </thead>
