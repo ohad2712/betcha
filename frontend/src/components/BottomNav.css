@@ -1,23 +1,35 @@
 .bottom-nav {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #333;
-    padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+    justify-content: space-around; /* Distribute items evenly */
+    align-items: center; /* Center items vertically */
+    background-color: #333; /* Background color */
+    padding: 10px; /* Padding around items */
+    position: fixed; /* Fixes the navbar to the bottom of the viewport */
+    bottom: 0; /* Aligns the navbar to the bottom */
+    left: 0; /* Aligns the navbar to the left */
+    width: 100%; /* Ensures the navbar spans the full width */
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    z-index: 1000; /* Keeps it above other content */
+    box-sizing: border-box; /* Includes padding and border in the element’s total width and height */
   }
   
   .nav-item {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
+    color: white; /* Text color */
+    text-decoration: none; /* Removes underline */
+    font-size: 14px; /* Font size */
+    padding: 0 15px; /* Padding on left and right sides */
+    position: relative; /* For positioning the border */
+  }
+  
+  .nav-item:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.3); /* Light white-ish vertical line */
+  }
+  
+  .nav-item.active {
+    background-color: #555; /* Brighter background color for the active tab */
   }
   
   .nav-item:hover {
-    color: #ddd;
+    color: #ddd; /* Change color on hover */
   }
   
