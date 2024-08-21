@@ -10,7 +10,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await axios.get('/api/matches/upcoming');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
         setMatches(response.data.matches);
       } catch (error) {
         console.error('Error fetching matches:', error);

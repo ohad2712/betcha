@@ -10,7 +10,7 @@ const Settings: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.post('/api/settings/login', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/settings/login`, {
         username,
         emailPreferences,
         notificationPreferences,

@@ -15,7 +15,7 @@ const OverallTable: React.FC = () => {
   useEffect(() => {
     const fetchSeasonStats = async () => {
       try {
-        const response = await axios.get('/api/season/standings');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/season/standings`);
         setSeasonStats(response.data);
       } catch (error) {
         console.error('Error fetching season stats:', error);

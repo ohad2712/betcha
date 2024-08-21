@@ -15,7 +15,7 @@ const ThisGameweek: React.FC = () => {
   useEffect(() => {
     const fetchGameweekStats = async () => {
       try {
-        const response = await axios.get('/api/gameweek/current');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/gameweek/current`);
         setGameweekStats(response.data);
       } catch (error) {
         console.error('Error fetching gameweek stats:', error);

@@ -20,7 +20,7 @@ const Cup: React.FC = () => {
   useEffect(() => {
     const fetchCupData = async () => {
       try {
-        const response = await axios.get('/api/cup');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/cup`);
         setSemiFinals(response.data.semiFinals);
         setFinals(response.data.finals);
       } catch (error) {
