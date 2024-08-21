@@ -1,0 +1,18 @@
+/* src/components/UserInitials.css */
+.user-initials {
+  position: fixed; /* Keeps the element fixed in the viewport */
+  top: 10px; /* Distance from the top */
+  right: 10px; /* Distance from the right */
+  background-color: #007bff; /* Blue background color */
+  color: white; /* White text color */
+  border-radius: 50%; /* Circular shape */
+  width: 40px; /* Width of the circle */
+  height: 40px; /* Height of the circle */
+  display: flex; /* Flexbox for centering content */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 18px; /* Font size */
+  font-weight: bold; /* Font weight */
+  z-index: 1000; /* Ensure it's on top of other elements */
+}

@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Example media query for mobile screens */
+@media (max-width: 600px) {
+  .bottom-nav {
+    padding: 5px;
+  }
+
+  .nav-item {
+    font-size: 12px;
+  }
+}
