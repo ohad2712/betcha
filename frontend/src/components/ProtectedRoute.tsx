@@ -1,18 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { UserContext } from '../UserContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const context = useContext(UserContext);
+  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
 
-  if (!context) {
-    // Handle the case when context is null (optional)
-    return <Navigate to="/login" />;
-  }
-
-  const { user } = context;
-
-  if (!user) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
