@@ -15,11 +15,20 @@ const Login: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-
   const handleLogin = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { username, password });
-      dispatch(login({ username } as any));
+      const token = response.data.token;
+
+      // Store token in localStorage
+      localStorage.setItem('token', token);
+      console.log("In login", {token});
+      
+
+      // Add token to axios default headers
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      dispatch(login({ username }));
 
       navigate('/home');
     } catch (error) {
@@ -28,12 +37,12 @@ const Login: React.FC = () => {
   };
 
   const validateUsername = (value: string) => {
-    setUsernameValid(value.length >= 3); // Simple validation, customize as needed
+    setUsernameValid(value.length >= 3);
     setUsername(value);
   };
 
   const validatePassword = (value: string) => {
-    setPasswordValid(value.length >= 6); // Simple validation, customize as needed
+    setPasswordValid(value.length >= 6);
     setPassword(value);
   };
 

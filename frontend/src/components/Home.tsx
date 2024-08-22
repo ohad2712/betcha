@@ -10,8 +10,16 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
-        setMatches(response.data.matches);
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        console.log("In fetchMatches", {token});
+
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the Authorization header with the token
+          },
+        });
+
+        setMatches(response.data);
       } catch (error) {
         console.error('Error fetching matches:', error);
       }
@@ -31,7 +39,7 @@ const Home: React.FC = () => {
       <ul>
         {matches.map((match: any) => (
           <li key={match.id}>
-            {match.homeTeam.name} vs {match.awayTeam.name}
+            {match.homeTeam} vs {match.awayTeam}
             <input
               type="number"
               placeholder="Home Goals"
