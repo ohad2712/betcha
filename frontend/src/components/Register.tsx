@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './AuthForm.css';
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -17,7 +18,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="auth-form register-form">
       <h2>Register</h2>
       <input
         type="text"
