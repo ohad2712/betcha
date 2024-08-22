@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../store/userSlice';
 import { AppDispatch } from '../store';
 import './AuthForm.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 
 const Login: React.FC = () => {
@@ -13,11 +13,15 @@ const Login: React.FC = () => {
   const [usernameValid, setUsernameValid] = useState<boolean | null>(null);
   const [passwordValid, setPasswordValid] = useState<boolean | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
 
   const handleLogin = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { username, password });
       dispatch(login({ username } as any));
+
+      navigate('/home');
     } catch (error) {
       console.error('Login failed', error);
     }
