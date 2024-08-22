@@ -1,4 +1,3 @@
-// routes/matches.ts
 import { Router } from 'express';
 import axios from 'axios';
 import { Match } from '../models/match';
@@ -6,42 +5,76 @@ import { authenticate } from '../middleware/authenticate';
 
 const router = Router();
 
-const API_KEY = process.env.FOOTBALL_API_KEY;
-const API_URL = 'https://v3.football.api-sports.io';
+// Helper function to get the latest active gameweek ID
+const getLatestActiveGameweek = async (): Promise<number | null> => {
+  try {
+    const response = await axios.get(`${process.env.API_FOOTBALL_URL}/fixtures/rounds`, {
+      params: {
+        league: process.env.LEAGUE_CODE,
+        season: process.env.SEASON,
+        current: 'true',
+      },
+      headers: {
+        'x-apisports-key': process.env.FOOTBALL_API_KEY,
+      },
+    });
+
+    // Assuming the API returns an array of gameweeks and the last one is the active one
+    const gameweeks = response.data.response;
+    const latestGameweek = gameweeks.pop(); // Get the latest active gameweek
+
+    if (latestGameweek) {
+      return parseInt(latestGameweek.match(/\d+/)[0]); // Extract the number from the gameweek string
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Failed to fetch the latest active gameweek:', error);
+    return null;
+  }
+};
 
 router.get('/upcoming', authenticate, async (req, res) => {
   try {
-    const gameweekId = req.query.gameweek;
+    console.log("In /upcoming :)", req.headers);
     
-    // Check if the next gameweek is already cached
-    const cachedMatches = await Match.findAll({ where: { gameweekId: Number(gameweekId) } });
-    
+    const gameweekId = await getLatestActiveGameweek();
+
+    if (!gameweekId) {
+      return res.status(500).json({ error: 'Failed to retrieve the latest active gameweek' });
+    }
+
+    // Check if the matches for this gameweek are already cached
+    const cachedMatches = await Match.findAll({ where: { gameweekId } });
+
     if (cachedMatches.length > 0) {
       return res.json(cachedMatches);
     }
 
-    // Fetch upcoming matches from the API
-    const response = await axios.get(`${API_URL}/fixtures`, {
+    // Fetch upcoming matches for the gameweek from the API
+    const response = await axios.get(`${process.env.API_FOOTBALL_URL}/fixtures`, {
       params: {
-        league: '39', // Premier League
-        season: '2024',
-        next: '10',
+        league: process.env.LEAGUE_CODE,
+        season: process.env.SEASON,
+        round: `Regular Season - ${gameweekId}`,
       },
       headers: {
-        'x-apisports-key': API_KEY,
+        'x-apisports-key': process.env.FOOTBALL_API_KEY,
       },
     });
 
-    const matchesData = JSON.parse(response.data.response);
-    // TODO: add a type for this
+    const matchesData = response.data.response;
+
+    // Map the API data to your Match model
     const matches = matchesData.map((data: any) => ({
-      gameweekId: Number(gameweekId),
+      gameweekId,
       homeTeam: data.teams.home.name,
       awayTeam: data.teams.away.name,
       homeGoals: 0,
       awayGoals: 0,
     }));
 
+    // Save the matches to the cache (database)
     const savedMatches = await Match.bulkCreate(matches);
     res.json(savedMatches);
   } catch (error) {
