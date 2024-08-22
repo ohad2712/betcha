@@ -34,7 +34,7 @@ const SettingsWidget: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ is
 
   const handleLogout = () => {
     dispatch(logout());
-    window.location.href = '/login'; // Redirect to login page
+    window.location.href = '/'; // Redirect to auth page
   };
 
   // Close the widget when clicking outside
