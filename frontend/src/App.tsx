@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import AuthPage from './components/AuthPage';
 import Home from './components/Home';
 import ThisGameweek from './components/ThisGameweek';
 import OverallTable from './components/OverallTable';
@@ -11,10 +10,12 @@ import SettingsWidget from './components/SettingsWidget';
 import ProtectedRoute from './components/ProtectedRoute';
 import BottomNav from './components/BottomNav';
 import UserInitials from './components/UserInitials';
+import Login from './components/Login';
 
 import UserProvider from './UserContext';
 import { hydrate } from './store/userSlice';
 import { RootState } from './store';
+import Register from './components/Register';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -36,7 +37,8 @@ const App: React.FC = () => {
   return (
     <UserProvider>
       <Routes>
-        <Route path="/" element={<AuthPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route
           path="/*"
