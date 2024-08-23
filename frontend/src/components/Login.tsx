@@ -6,6 +6,7 @@ import { AppDispatch } from '../store';
 import './AuthForm.css';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
+import { jwtDecode } from 'jwt-decode';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -19,22 +20,24 @@ const Login: React.FC = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { username, password });
       const token = response.data.token;
-
-      // Store token in localStorage
+  
+      // Decode token to get expiration time
+      const decodedToken: any = jwtDecode(token);
+      const expirationTime = decodedToken.exp * 1000; // Convert to milliseconds
+  
+      // Store token and expiration time in localStorage
       localStorage.setItem('token', token);
-      console.log("In login", {token});
-      
-
+      localStorage.setItem('tokenExpiration', expirationTime.toString());
+  
       // Add token to axios default headers
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
+  
       dispatch(login({ username }));
-
       navigate('/home');
     } catch (error) {
       console.error('Login failed', error);
     }
-  };
+  };  
 
   const validateUsername = (value: string) => {
     setUsernameValid(value.length >= 3);

@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 interface UserState {
   isAuthenticated: boolean;
@@ -14,7 +16,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    login: (state, action) => {
+    login: (state, action) => {      
       state.isAuthenticated = true;
       state.username = action.payload.username;
       localStorage.setItem('isAuthenticated', 'true');
@@ -25,13 +27,23 @@ const userSlice = createSlice({
       state.username = null;
       localStorage.removeItem('isAuthenticated');
       localStorage.removeItem('username');
+      localStorage.removeItem('token');
     },
     hydrate: (state) => {
-      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-      const username = localStorage.getItem('username');
-      if (isAuthenticated && username) {
-        state.isAuthenticated = isAuthenticated;
-        state.username = username;
+      const token = localStorage.getItem('token');
+      const expirationTime = localStorage.getItem('tokenExpiration');
+      const currentTime = Date.now();      
+
+      if (token && expirationTime && currentTime < parseInt(expirationTime)) {        
+        const decodedToken: any = jwtDecode(token);
+        state.isAuthenticated = true;
+        state.username = decodedToken.username;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      } else {        
+        state.isAuthenticated = false;
+        state.username = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenExpiration');
       }
     },
   },

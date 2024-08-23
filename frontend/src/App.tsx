@@ -13,7 +13,7 @@ import UserInitials from './components/UserInitials';
 import Login from './components/Login';
 
 import UserProvider from './UserContext';
-import { hydrate } from './store/userSlice';
+import { hydrate, login } from './store/userSlice';
 import { RootState } from './store';
 import Register from './components/Register';
 
@@ -21,10 +21,21 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const username = useSelector((state: RootState) => state.user.username);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     dispatch(hydrate());
+    setIsHydrated(true);
   }, [dispatch]);
+
+  const fetchUsername = () => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername && !username) {
+      dispatch(login({ username: storedUsername })); // Dispatch login action if username isn't set
+    }
+  };
+
+  fetchUsername();
 
   const handleOpenSettings = () => {
     setIsSettingsOpen(true);
@@ -33,6 +44,12 @@ const App: React.FC = () => {
   const handleCloseSettings = () => {
     setIsSettingsOpen(false);
   };
+
+  console.log("Home", {isHydrated, username});
+  
+  if (!isHydrated) {
+    return <div>Loading...</div>; // or a spinner/loading component
+  }
 
   return (
     <UserProvider>
@@ -43,7 +60,7 @@ const App: React.FC = () => {
         <Route
           path="/*"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute username={username}>
               <div className="app-container">
                 <Routes>
                   <Route path="/home" element={<Home />} />
