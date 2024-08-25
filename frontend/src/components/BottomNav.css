@@ -1,35 +1,50 @@
 .bottom-nav {
-    display: flex;
-    justify-content: space-around; /* Distribute items evenly */
-    align-items: center; /* Center items vertically */
-    background-color: #333; /* Background color */
-    padding: 10px; /* Padding around items */
-    position: fixed; /* Fixes the navbar to the bottom of the viewport */
-    bottom: 0; /* Aligns the navbar to the bottom */
-    left: 0; /* Aligns the navbar to the left */
-    width: 100%; /* Ensures the navbar spans the full width */
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
-    z-index: 1000; /* Keeps it above other content */
-    box-sizing: border-box; /* Includes padding and border in the element’s total width and height */
-  }
-  
-  .nav-item {
-    color: white; /* Text color */
-    text-decoration: none; /* Removes underline */
-    font-size: 14px; /* Font size */
-    padding: 0 15px; /* Padding on left and right sides */
-    position: relative; /* For positioning the border */
-  }
-  
-  .nav-item:not(:last-child) {
-    border-right: 1px solid rgba(255, 255, 255, 0.3); /* Light white-ish vertical line */
-  }
-  
-  .nav-item.active {
-    background-color: #555; /* Brighter background color for the active tab */
-  }
-  
-  .nav-item:hover {
-    color: #ddd; /* Change color on hover */
-  }
-  
+  display: flex;
+  justify-content: space-between; /* Distribute items evenly */
+  align-items: center; /* Center items vertically */
+  background-color: #333; /* Background color */
+  padding: 10px; /* Padding around items */
+  position: fixed; /* Fixes the navbar to the bottom of the viewport */
+  bottom: 0; /* Aligns the navbar to the bottom */
+  left: 0; /* Aligns the navbar to the left */
+  width: 105%; /* Ensures the navbar spans the full width */
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  z-index: 1000; /* Keeps it above other content */
+  box-sizing: border-box; /* Includes padding and border in the element’s total width and height */
+}
+
+.nav-item {
+  color: white; /* Text color */
+  text-decoration: none; /* Removes underline */
+  text-align: center; /* Center text horizontally */
+  display: flex;
+  flex-direction: column; /* Stack icon and label vertically */
+  align-items: center; /* Center items horizontally */
+  flex: 1; /* Allow items to grow and fill available space */
+  max-width: 100px; /* Optional: limit width to keep items from stretching too much */
+}
+
+.nav-icon {
+  font-size: 24px; /* Icon size */
+  margin-bottom: 4px; /* Space between icon and label */
+}
+
+.nav-label {
+  font-size: 12px; /* Font size for label */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern, readable font */
+  font-weight: 400; /* Lighter weight for a more delicate appearance */
+  letter-spacing: 0.5px; /* Slight spacing for better readability */
+}
+
+
+.nav-item:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.3); /* Light white-ish vertical line */
+}
+
+.nav-item.active {
+  background-color: #555; /* Brighter background color for the active tab */
+}
+
+.nav-item:hover {
+  color: #ddd; /* Change color on hover */
+}
