@@ -23,16 +23,19 @@ const Login: React.FC = () => {
   
       // Decode token to get expiration time
       const decodedToken: any = jwtDecode(token);
+      const { userId } = decodedToken;
       const expirationTime = decodedToken.exp * 1000; // Convert to milliseconds
   
       // Store token and expiration time in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('tokenExpiration', expirationTime.toString());
+      localStorage.setItem('userId', userId.toString());  // Store userId
+
   
       // Add token to axios default headers
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   
-      dispatch(login({ username }));
+      dispatch(login({ username, id: userId }));
       navigate('/home');
     } catch (error) {
       console.error('Login failed', error);

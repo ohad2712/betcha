@@ -1,9 +1,6 @@
 // models/guess.ts
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../db';
-import { Gameweek } from './gameweek';
-import { Match } from './match';
-import { User } from './user';
 
 class Guess extends Model {
   public id!: number;
@@ -38,11 +35,11 @@ Guess.init(
     },
     exact: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      defaultValue: false,
     },
     correctDirection: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      defaultValue: false,
     },
     homeGoals: {  
       type: DataTypes.INTEGER,
@@ -56,6 +53,12 @@ Guess.init(
   {
     sequelize,
     modelName: 'Guess',
+    indexes: [
+      {
+        unique: true,
+        fields: ['userId', 'matchId']
+      }
+    ]
   }
 );
 

@@ -20,6 +20,7 @@ import Register from './components/Register';
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const username = useSelector((state: RootState) => state.user.username);
+  const userId = useSelector((state: RootState) => state.user.id);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -28,14 +29,14 @@ const App: React.FC = () => {
     setIsHydrated(true);
   }, [dispatch]);
 
-  const fetchUsername = () => {
+  useEffect(() => {
     const storedUsername = localStorage.getItem('username');
-    if (storedUsername && !username) {
-      dispatch(login({ username: storedUsername })); // Dispatch login action if username isn't set
-    }
-  };
+    const storedUserId = localStorage.getItem('userId');
 
-  fetchUsername();
+    if (storedUsername && !username) {
+      dispatch(login({ username: storedUsername, id: parseInt(storedUserId || '0') }));
+    }
+  }, [dispatch, username]);
 
   const handleOpenSettings = () => {
     setIsSettingsOpen(true);
@@ -44,8 +45,6 @@ const App: React.FC = () => {
   const handleCloseSettings = () => {
     setIsSettingsOpen(false);
   };
-
-  console.log("Home", {isHydrated, username});
   
   if (!isHydrated) {
     return <div>Loading...</div>; // or a spinner/loading component

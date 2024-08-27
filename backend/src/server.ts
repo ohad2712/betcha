@@ -5,7 +5,7 @@ import { sequelize } from './db';
 
 import authRoutes from './routes/auth';
 import matchRoutes from './routes/matches';
-import guessRoutes from './routes/guess';
+import guessRoutes from './routes/guesses';
 import gameweekRoutes from './routes/gameweek';
 import seasonRoutes from './routes/season';
 import cupRoutes from './routes/cup';

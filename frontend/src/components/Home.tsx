@@ -2,39 +2,29 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import styles from './Home.module.css'; // Import the CSS module
-import teams from '../utils'; // Import the teams utility
+import styles from './Home.module.css';
+import teams from '../utils';
 
 const Home: React.FC = () => {
   const [matches, setMatches] = useState([]);
   const [loadingMatches, setLoadingMatches] = useState(true);
-  const [gameweek, setGameweek] = useState<number | null>(null); // State variable for gameweek
+  const [gameweek, setGameweek] = useState<number | null>(null);
+  const [guesses, setGuesses] = useState<{ [key: number]: { homeGoals: number | null; awayGoals: number | null } }>({});
+  const [saving, setSaving] = useState(false);
+
   const username = useSelector((state: RootState) => state.user.username);
+  const userId = useSelector((state: RootState) => state.user.id);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchMatches = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
-        console.log({data:response.data});
-        
         setMatches(response.data);
-        
-        if (response.data.length > 0) {
-          setGameweek(response.data[0].gameweekId); // Set the gameweek state
 
-          console.log({now_matches: matches});
-          
-          matches.map((match: any) => {
-            // Get team info from the utility
-            console.log(match.homeTeam, match.awayTeam);
-            
-            const homeTeam = teams[match.homeTeam];
-            const awayTeam = teams[match.awayTeam];
-      
-            console.log({homeTeam, awayTeam});
-          });
-          
+        if (response.data.length > 0) {
+          setGameweek(response.data[0].gameweekId);
         }
       } catch (error) {
         console.error('Error fetching matches:', error);
@@ -46,7 +36,55 @@ const Home: React.FC = () => {
     fetchMatches();
   }, [dispatch, username]);
 
-  if (!username) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      saveGuessesToDB();
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [guesses]);
+
+  const handleGuessChange = (matchId: number, homeGoals: number | null, awayGoals: number | null) => {
+    setGuesses((prevGuesses) => ({
+      ...prevGuesses,
+      [matchId]: { homeGoals, awayGoals },
+    }));
+  };
+
+  const saveGuessesToDB = async () => {
+    if (!userId) return;
+
+    // Filter out incomplete guesses
+    const completeGuesses = Object.entries(guesses).filter(
+      ([, { homeGoals, awayGoals }]) => homeGoals !== null && awayGoals !== null
+    );
+
+    if (completeGuesses.length === 0) {
+      return;
+    }
+
+    setSaving(true);
+    try {      
+      const guessesObjects = completeGuesses.map(([matchId, { homeGoals, awayGoals }]) => ({
+        userId,
+        matchId: parseInt(matchId),
+        gameweekId: gameweek!,
+        homeGoals,
+        awayGoals,
+      }));
+
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/guesses`, { guesses: guessesObjects });
+      
+      setTimeout(() => {
+        setSaving(false);
+      }, 1000);
+    } catch (error) {
+      console.error('Error saving guesses:', error);
+      setSaving(false);
+    }
+  };
+
+  if (!username || !userId) {
     return <div>Loading user data...</div>;
   }
 
@@ -58,9 +96,11 @@ const Home: React.FC = () => {
     <div className={styles.container}>
       <h2 className={styles.h2}>Upcoming Matches - GW {gameweek}</h2>
       <h4 className={styles.h4}>{process.env.REACT_APP_ACTIVE_SEASON}</h4>
+
+      {saving && <div className={styles.syncing}><span>Saving...</span></div>} 
+
       <ul className={styles["matches-list"]}>
         {matches.map((match: any) => {
-          // Get team info from the utility
           const homeTeam = teams[match.homeTeam];
           const awayTeam = teams[match.awayTeam];
 
@@ -76,19 +116,21 @@ const Home: React.FC = () => {
               </div>
               <input
                 type="number"
-                placeholder="0"
+                placeholder="-"
                 className={styles.input}
+                value={guesses[match.id]?.homeGoals ?? ''}
                 onChange={(e) =>
-                  handleGuessChange(match.id, parseInt(e.target.value), match.awayGoals)
+                  handleGuessChange(match.id, e.target.value === '' ? null : parseInt(e.target.value), guesses[match.id]?.awayGoals ?? null)
                 }
               />
               <span className={styles.colon}>:</span>
               <input
                 type="number"
-                placeholder="0"
+                placeholder="-"
                 className={styles.input}
+                value={guesses[match.id]?.awayGoals ?? ''}
                 onChange={(e) =>
-                  handleGuessChange(match.id, match.homeGoals, parseInt(e.target.value))
+                  handleGuessChange(match.id, guesses[match.id]?.homeGoals ?? null, e.target.value === '' ? null : parseInt(e.target.value))
                 }
               />
               <div className={styles.team}>
@@ -105,10 +147,6 @@ const Home: React.FC = () => {
       </ul>
     </div>
   );
-};
-
-const handleGuessChange = (matchId: number, homeGoals: number, awayGoals: number) => {
-  // Implement save logic here, with a debounce for 3 seconds of idle time
 };
 
 export default Home;
