@@ -14,6 +14,6 @@
   cursor: pointer; /* Pointer cursor on hover */
   font-size: 18px; /* Font size */
   font-weight: bold; /* Font weight */
-  font-family: 'Arial', sans-serif;
+  font-family: 'Roboto', sans-serif;
   z-index: 1000; /* Ensure it's on top of other elements */
 }
