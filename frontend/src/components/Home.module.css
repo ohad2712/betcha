@@ -1,4 +1,24 @@
 /* General styling for mobile view */
+
+/* Styling for h2 */
+.h2 {
+  font-size: 24px; /* Bigger font size for h2 */
+  font-weight: bold; /* Bold text */
+  color: #37474f; /* A soft dark color */
+  margin-bottom: 4px; /* Small margin below h2 */
+  font-family: 'Helvetica Neue', Arial, sans-serif; /* Delicate, easy-to-read font */
+}
+
+/* Styling for h4 */
+.h4 {
+  font-size: 18px; /* Smaller font size for h4 */
+  font-weight: normal; /* Normal weight */
+  color: #607d8b; /* Softer color for h4 */
+  margin-top: 0; /* Ensure h4 is close to h2 */
+  font-family: 'Helvetica Neue', Arial, sans-serif; /* Matching font family */
+}
+
+
 .container {
   display: flex;
   flex-direction: column;

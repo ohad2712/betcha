@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { login } from '../store/userSlice';
 import styles from './Home.module.css'; // Import the CSS module
 import teams from '../utils'; // Import the teams utility
 
 const Home: React.FC = () => {
   const [matches, setMatches] = useState([]);
   const [loadingMatches, setLoadingMatches] = useState(true);
+  const [gameweek, setGameweek] = useState<number | null>(null); // State variable for gameweek
   const username = useSelector((state: RootState) => state.user.username);
   const dispatch = useDispatch();
 
@@ -17,6 +17,10 @@ const Home: React.FC = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
         setMatches(response.data);
+        
+        if (response.data.length > 0) {
+          setGameweek(response.data[0].gameweekId); // Set the gameweek state
+        }
       } catch (error) {
         console.error('Error fetching matches:', error);
       } finally {
@@ -37,8 +41,8 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Welcome, {username}</h1>
-      <h2>Upcoming Matches</h2>
+      <h2 className={styles.h2}>Upcoming Matches - GW {gameweek}</h2>
+      <h4 className={styles.h4}>{process.env.REACT_APP_ACTIVE_SEASON}</h4>
       <ul>
         {matches.map((match: any) => {
           // Get team info from the utility
