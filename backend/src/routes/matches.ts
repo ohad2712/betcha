@@ -43,9 +43,7 @@ const getLatestActiveGameweek = async (): Promise<number | null> => {
 };
 
 router.get('/upcoming', authenticate, async (req, res) => {
-  try {
-    console.log("In /upcoming :)", req.headers);
-    
+  try {    
     const gameweekId = await getLatestActiveGameweek();
 
     if (!gameweekId) {
