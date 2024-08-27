@@ -6,6 +6,10 @@ import styles from './Home.module.css';
 import teams from '../utils';
 import SyncIcon from './SyncIcon';
 
+// TODO: use the saved guesses when loading the matches
+// TODO: add a sticky date and time. The matches should be ordered by ascending order by their kickoff time, and
+// grouped by them.
+
 const Home: React.FC = () => {
   const [matches, setMatches] = useState([]);
   const [loadingMatches, setLoadingMatches] = useState(true);
