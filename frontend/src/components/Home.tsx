@@ -16,10 +16,25 @@ const Home: React.FC = () => {
     const fetchMatches = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
+        console.log({data:response.data});
+        
         setMatches(response.data);
         
         if (response.data.length > 0) {
           setGameweek(response.data[0].gameweekId); // Set the gameweek state
+
+          console.log({now_matches: matches});
+          
+          matches.map((match: any) => {
+            // Get team info from the utility
+            console.log(match.homeTeam, match.awayTeam);
+            
+            const homeTeam = teams[match.homeTeam];
+            const awayTeam = teams[match.awayTeam];
+      
+            console.log({homeTeam, awayTeam});
+          });
+          
         }
       } catch (error) {
         console.error('Error fetching matches:', error);
@@ -43,7 +58,7 @@ const Home: React.FC = () => {
     <div className={styles.container}>
       <h2 className={styles.h2}>Upcoming Matches - GW {gameweek}</h2>
       <h4 className={styles.h4}>{process.env.REACT_APP_ACTIVE_SEASON}</h4>
-      <ul>
+      <ul className={styles["matches-list"]}>
         {matches.map((match: any) => {
           // Get team info from the utility
           const homeTeam = teams[match.homeTeam];

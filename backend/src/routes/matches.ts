@@ -105,14 +105,143 @@ router.get('/upcoming', authenticate, async (req, res) => {
                 "winner": true
               }
             }
-          }
+          },
+          {
+            "teams": {
+              "home": {
+                "id": 4,
+                "name": "Aston Villa",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Wolves",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+          },
+          {
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Bournemouth",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "West Ham United",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+          },
+          {
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Brighton",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Tottenham Hotspurs",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+          },
+          {
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Crystal Palace",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Southampton",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+          },
+          {
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Everton",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Nottingham Forest",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+          },
+          {
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Fulham",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Newcastle United",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+          },
+          {
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Ipswich",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Manchester City",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+          },
+          {
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Leicester City",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Brentford",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+          },
         ]
       }
     };
     
 
     const matchesData = response.data.response;
-
+    console.log("HERE!");
+    
     // Map the API data to your Match model
     const matches = matchesData.map((data: any) => ({
       gameweekId,
@@ -122,6 +251,8 @@ router.get('/upcoming', authenticate, async (req, res) => {
       awayGoals: 0,
     }));
 
+    console.log({matches});
+    
     // Save the matches to the cache (database)
     const savedMatches = await Match.bulkCreate(matches);
     res.json(savedMatches);

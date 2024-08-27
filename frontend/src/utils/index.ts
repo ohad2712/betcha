@@ -90,8 +90,8 @@ type TeamInfo = {
         formatted: "Southampton",
         shortcut: "Southampton",
     },
-    "Tottenahm Hotspurs": {
-        name: "Tottenahm Hotspurs",
+    "Tottenham Hotspurs": {
+        name: "Tottenham Hotspurs",
         formatted: "Spurs",
         shortcut: "Spurs",
     },
