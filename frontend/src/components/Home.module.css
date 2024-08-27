@@ -55,6 +55,13 @@
   border-radius: 8px;
 }
 
+.kickoffTime {
+  font-size: 7px; /* Smaller font size for kickoff time */
+  color: grey;
+  text-align: center;
+  margin: 1px 0; /* Adjust spacing as needed */
+}
+
 .team {
   display: flex;
   align-items: center; /* Vertically align the logo and name */

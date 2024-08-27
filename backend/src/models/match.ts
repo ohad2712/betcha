@@ -11,6 +11,7 @@ class Match extends Model {
   public awayGoals!: number;
   public homeTeam!: string;
   public awayTeam!: string;
+  public kickoffTime!: Date;
 }
 
 // Initialize the model
@@ -41,6 +42,10 @@ Match.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    kickoffTime: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    }
   },
   {
     sequelize,

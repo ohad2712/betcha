@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import axios from 'axios';
+import moment from 'moment-timezone';
+
 import { Match } from '../models/match';
 import { authenticate } from '../middleware/authenticate';
 
@@ -63,6 +65,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
     //     league: process.env.LEAGUE_CODE,
     //     season: process.env.SEASON,
     //     round: `Regular Season - ${gameweekId}`,
+    //     timezone: 'Asia/Jerusalem',
     //   },
     //   headers: {
     //     'x-apisports-key': process.env.FOOTBALL_API_KEY,
@@ -73,6 +76,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
       "data": {
         "response": [
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2020-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 1,
@@ -247,6 +260,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
       awayTeam: data.teams.away.name,
       homeGoals: 0,
       awayGoals: 0,
+      kickoffTime: moment(data.fixture.date).tz('Asia/Jerusalem').toDate(),
     }));
 
     console.log({matches});
