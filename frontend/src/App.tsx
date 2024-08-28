@@ -31,7 +31,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
-    const storedUserId = localStorage.getItem('userId');
+    const storedUserId = localStorage.getItem('userId');    
 
     if (storedUsername && !username) {
       dispatch(login({ username: storedUsername, id: parseInt(storedUserId || '0') }));

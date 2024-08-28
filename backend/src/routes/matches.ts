@@ -56,7 +56,9 @@ router.get('/upcoming', authenticate, async (req, res) => {
     const cachedMatches = await Match.findAll({ where: { gameweekId } });
 
     if (cachedMatches.length > 0) {
-      return res.json(cachedMatches);
+      const groupedMatches = groupMatchesByKickoffTime(cachedMatches);
+      
+      return res.json(groupedMatches);
     }
 
     // // Fetch upcoming matches for the gameweek from the API
@@ -341,7 +343,6 @@ router.get('/upcoming', authenticate, async (req, res) => {
     
 
     const matchesData = response.data.response;
-    console.log("HERE!");
     
     // Map the API data to your Match model
     const matches = matchesData.map((data: any) => ({
@@ -352,16 +353,43 @@ router.get('/upcoming', authenticate, async (req, res) => {
       awayGoals: 0,
       kickoffTime: moment(data.fixture.date).tz('Asia/Jerusalem').toDate(),
     }));
-
-    console.log({matches});
     
     // Save the matches to the cache (database)
     const savedMatches = await Match.bulkCreate(matches);
-    res.json(savedMatches);
+      
+    const groupedMatches = groupMatchesByKickoffTime(savedMatches);    
+
+    res.json(groupedMatches);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to fetch matches' });
   }
 });
+
+// Helper function to group matches by kickoffTime
+function groupMatchesByKickoffTime(matches: Match[]) {
+  // Group by formatted kickoffTime string (e.g., "2024-02-06T14:00:00+00:00")
+  const groupedMatches: { [key: string]: Match[] } = {};
+
+  matches.forEach((match) => {
+    const kickoffTimeKey = match.kickoffTime.toISOString(); // Or format as needed
+
+    if (!groupedMatches[kickoffTimeKey]) {
+      groupedMatches[kickoffTimeKey] = [];
+    }
+
+    groupedMatches[kickoffTimeKey].push(match);
+  });
+
+  // Convert to array of objects sorted by kickoffTime
+  const sortedGroupedMatches = Object.keys(groupedMatches)
+    .sort()
+    .map((key) => ({
+      kickoffTime: key,
+      matches: groupedMatches[key],
+    }));
+
+  return sortedGroupedMatches;
+}
 
 export default router;
