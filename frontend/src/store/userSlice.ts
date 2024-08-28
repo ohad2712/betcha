@@ -40,16 +40,18 @@ const userSlice = createSlice({
       const expirationTime = localStorage.getItem('tokenExpiration');
       const currentTime = Date.now();      
 
-      if (token && expirationTime && currentTime < parseInt(expirationTime)) {        
+      if (token && expirationTime && currentTime < parseInt(expirationTime)) { 
         const decodedToken: any = jwtDecode(token);
         state.isAuthenticated = true;
         state.username = decodedToken.username;
         state.id = decodedToken.id;
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      } else {        
+      } else {                
         state.isAuthenticated = false;
         state.username = null;
         state.id = null;
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('username');
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpiration');
       }
