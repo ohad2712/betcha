@@ -80,7 +80,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2020-02-06T14:00:00+00:00",
+              "date": "2024-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -102,6 +102,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 3,
@@ -118,6 +128,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 4,
@@ -134,6 +154,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 3,
@@ -150,6 +180,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 3,
@@ -166,6 +206,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 3,
@@ -182,6 +232,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 3,
@@ -198,6 +258,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-07T18:30:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 3,
@@ -214,6 +284,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-06T19:30:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 3,
@@ -230,6 +310,16 @@ router.get('/upcoming', authenticate, async (req, res) => {
             }
           },
           {
+            "fixture": {
+              "id": 239625,
+              "referee": null,
+              "timezone": "UTC",
+              "date": "2024-02-06T17:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
             "teams": {
               "home": {
                 "id": 3,
