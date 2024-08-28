@@ -40,7 +40,14 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error('Login failed', error);
     }
-  };  
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent the default form submission
+      handleLogin();
+    }
+  };
 
   const validateUsername = (value: string) => {
     setUsernameValid(value.length >= 3);
@@ -55,29 +62,29 @@ const Login: React.FC = () => {
   return (
     <div className="auth-container">
       <Logo />
-      <div className="auth-form login-form">
-        <h2>Login</h2>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => validateUsername(e.target.value)}
-          className={usernameValid === null ? '' : usernameValid ? 'user-valid' : 'user-invalid'}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => validatePassword(e.target.value)}
-          className={passwordValid === null ? '' : passwordValid ? 'user-valid' : 'user-invalid'}
-        />
-        <button onClick={handleLogin}>Login</button>
+      <form className="auth-form login-form" onKeyDown={handleKeyDown}>
+          <h2>Login</h2>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => validateUsername(e.target.value)}
+            className={usernameValid === null ? '' : usernameValid ? 'user-valid' : 'user-invalid'}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => validatePassword(e.target.value)}
+            className={passwordValid === null ? '' : passwordValid ? 'user-valid' : 'user-invalid'}
+          />
+          <button onClick={handleLogin}>Login</button>
 
-        <p className="login-register-link">
-          Don't have an account yet?{' '}
-          <Link to="/register" className="login-register-link-text">Register</Link>
-        </p>
-      </div>
+          <p className="login-register-link">
+            Don't have an account yet?{' '}
+            <Link to="/register" className="login-register-link-text">Register</Link>
+          </p>
+      </form>
     </div>
   );
 };
