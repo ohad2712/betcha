@@ -5,10 +5,9 @@ import { RootState } from '../store';
 import styles from './Home.module.css';
 import teams from '../utils';
 import SyncIcon from './SyncIcon';
+import LockIcon from './LockIcon';
 
-// TODO: use the saved guesses when loading the matches
-// TODO: add a sticky date and time. The matches should be ordered by ascending order by their kickoff time, and
-// grouped by them.
+
 // TODO: fix issue where if a guess exists (if (completeGuesses.length === 0) is falsy), then any other input we fill triggers the sync icon, when it should only be triggered if a certain match has both home AND away guesses put. The actual guess is not saved with only half of the guess. It's just the sync icon animation that should not work as well.
 
 const Home: React.FC = () => {
@@ -18,6 +17,7 @@ const Home: React.FC = () => {
   const [guesses, setGuesses] = useState<{ [key: number]: { homeGoals: number | null; awayGoals: number | null } }>({});
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [deadlinePassed, setDeadlinePassed] = useState(false); // New state to check if deadline has passed
 
   const username = useSelector((state: RootState) => state.user.username);
   const userId = useSelector((state: RootState) => state.user.id);
@@ -44,11 +44,16 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchMatchesAndGuesses = async () => {
       try {
-        // Fetch upcoming matches
         const matchesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
         const upcomingMatches = matchesResponse.data;
-    
-        // Group matches by kickoffTime
+
+        // Determine if the deadline has passed
+        const firstKickoffTime = new Date(upcomingMatches[0].matches[0].kickoffTime);
+        const deadline = new Date(firstKickoffTime.getTime() - 60 * 60 * 1000); // 1 hour before kickoff
+        console.log({deadline, passed: new Date() > deadline});
+        
+        setDeadlinePassed(new Date() > deadline);
+
         const groupedMatches = upcomingMatches.reduce((acc: any, matchGroup: any) => {
           const formattedKickoffTime = formatKickoffTime(matchGroup.kickoffTime);
           if (!acc[formattedKickoffTime]) {
@@ -59,16 +64,14 @@ const Home: React.FC = () => {
         }, {});
         
         setGroupedMatches(groupedMatches);
-    
+
         if (upcomingMatches.length > 0) {
           const fetchedGameweek = upcomingMatches[0].matches[0].gameweekId;
           setGameweek(fetchedGameweek);
-    
-          // Fetch existing guesses for the user
+
           const guessesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/guesses/${fetchedGameweek}`);
           const userGuesses = guessesResponse.data;
-    
-          // Transform the fetched guesses into the expected state shape
+
           const transformedGuesses = userGuesses.reduce((acc: any, guess: any) => {
             acc[guess.matchId] = { homeGoals: guess.homeGoals, awayGoals: guess.awayGoals };
             return acc;
@@ -82,7 +85,6 @@ const Home: React.FC = () => {
         setLoadingMatches(false);
       }
     };
-    
 
     fetchMatchesAndGuesses();
   }, [dispatch, username]);
@@ -152,7 +154,9 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.h2}>Upcoming Matches - GW {gameweek}</h2>
+      <h2 className={styles.h2}>
+        Upcoming Matches - GW {gameweek} {deadlinePassed && <LockIcon />}
+      </h2>
       <h4 className={styles.h4}>{process.env.REACT_APP_ACTIVE_SEASON}</h4>
 
       <SyncIcon saving={saving} success={saveSuccess} />
@@ -166,8 +170,12 @@ const Home: React.FC = () => {
               const awayTeam = teams[match.awayTeam];
 
               return (
-                <li key={match.id} className={styles.match}>
-                  <div className={styles.team}>
+                <li key={match.id} className={styles.match} style={{ 
+                  opacity: deadlinePassed ? 0.5 : 1 
+                }}>
+                  <div className={styles.team} style={{ 
+                    color: deadlinePassed ? '#b0bec5' : '#37474f' 
+                  }}>
                     <img
                       src={`${process.env.PUBLIC_URL}/team_logos/${homeTeam.formatted}.png`}
                       alt={homeTeam.name}
@@ -183,6 +191,7 @@ const Home: React.FC = () => {
                     onChange={(e) =>
                       handleGuessChange(match.id, e.target.value === '' ? null : parseInt(e.target.value), guesses[match.id]?.awayGoals ?? null)
                     }
+                    disabled={deadlinePassed} // Disable input if deadline has passed
                   />
                   <span className={styles.colon}>:</span>
                   <input
@@ -193,8 +202,11 @@ const Home: React.FC = () => {
                     onChange={(e) =>
                       handleGuessChange(match.id, guesses[match.id]?.homeGoals ?? null, e.target.value === '' ? null : parseInt(e.target.value))
                     }
+                    disabled={deadlinePassed} // Disable input if deadline has passed
                   />
-                  <div className={styles.team}>
+                  <div className={styles.team} style={{ 
+                    color: deadlinePassed ? '#b0bec5' : '#37474f' 
+                  }}>
                     <span className={styles.name}>{awayTeam.shortcut}</span>
                     <img
                       src={`${process.env.PUBLIC_URL}/team_logos/${awayTeam.formatted}.png`}

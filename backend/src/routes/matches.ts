@@ -82,7 +82,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T14:00:00+00:00",
+              "date": "2025-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -108,7 +108,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T14:00:00+00:00",
+              "date": "2025-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -134,7 +134,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T14:00:00+00:00",
+              "date": "2025-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -160,7 +160,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T14:00:00+00:00",
+              "date": "2025-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -186,7 +186,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T14:00:00+00:00",
+              "date": "2025-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -212,7 +212,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T14:00:00+00:00",
+              "date": "2025-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -238,7 +238,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T14:00:00+00:00",
+              "date": "2025-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -264,7 +264,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-07T18:30:00+00:00",
+              "date": "2025-02-07T18:30:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -290,7 +290,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T19:30:00+00:00",
+              "date": "2025-02-06T19:30:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -316,7 +316,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "id": 239625,
               "referee": null,
               "timezone": "UTC",
-              "date": "2024-02-06T17:00:00+00:00",
+              "date": "2025-02-06T17:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -368,7 +368,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
 
 // Helper function to group matches by kickoffTime
 function groupMatchesByKickoffTime(matches: Match[]) {
-  // Group by formatted kickoffTime string (e.g., "2024-02-06T14:00:00+00:00")
+  // Group by formatted kickoffTime string (e.g., "2025-02-06T14:00:00+00:00")
   const groupedMatches: { [key: string]: Match[] } = {};
 
   matches.forEach((match) => {

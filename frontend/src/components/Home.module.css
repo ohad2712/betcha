@@ -9,6 +9,43 @@
   font-family: 'Helvetica Neue', Arial, sans-serif; /* Delicate, easy-to-read font */
 }
 
+/* Add styles for the lock icon */
+.lockIcon {
+  margin-left: 8px;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+
+/* Apply grey color to team names and adjust opacity for disabled inputs */
+.disabled {
+  color: #b0bec5; /* Brighter grey for disabled state */
+  opacity: 0.5; /* Opacity for disabled items */
+}
+
+/* Apply styles for the lock icon in h2 */
+.h2 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #37474f;
+  margin-bottom: 2px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  display: flex; /* Ensure h2 and icon are aligned */
+  align-items: center; /* Align icon with text */
+}
+
+.h2 .lockIcon {
+  margin-left: 8px;
+}
+
+/* Ensure input fields are also visually adjusted for disabled state */
+.input:disabled {
+  background-color: #e0e0e0;
+  border-color: #b0bec5;
+  color: #757575;
+}
+
+
 /* Styling for h4 */
 .h4 {
   font-size: 16px; /* Slightly smaller font size for h4 */
