@@ -36,4 +36,27 @@ router.post('/', authenticate, async (req, res) => {
   }
 });
 
+router.get('/:gameweekId', authenticate, async (req, res) => {
+  const gameweekId = req.params.gameweekId;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+
+  try {
+    const userGuesses = await Guess.findAll({
+      where: {
+        userId,
+        gameweekId: Number(gameweekId),
+      },
+    });
+
+    res.status(200).json(userGuesses);
+  } catch (error) {
+    console.error('Failed to fetch user guesses:', error);
+    res.status(500).json({ error: 'Failed to fetch user guesses' });
+  }
+});
+
 export default router;

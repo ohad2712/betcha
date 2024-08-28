@@ -9,6 +9,7 @@ import SyncIcon from './SyncIcon';
 // TODO: use the saved guesses when loading the matches
 // TODO: add a sticky date and time. The matches should be ordered by ascending order by their kickoff time, and
 // grouped by them.
+// TODO: fix issue where if a guess exists (if (completeGuesses.length === 0) is falsy), then any other input we fill triggers the sync icon, when it should only be triggered if a certain match has both home AND away guesses put. The actual guess is not saved with only half of the guess. It's just the sync icon animation that should not work as well.
 
 const Home: React.FC = () => {
   const [matches, setMatches] = useState([]);
@@ -24,22 +25,37 @@ const Home: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchMatches = async () => {
+    const fetchMatchesAndGuesses = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
-        setMatches(response.data);
+        // Fetch upcoming matches
+        const matchesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
+        const upcomingMatches = matchesResponse.data;
+        setMatches(upcomingMatches);
 
-        if (response.data.length > 0) {
-          setGameweek(response.data[0].gameweekId);
+        if (upcomingMatches.length > 0) {
+          const fetchedGameweek = upcomingMatches[0].gameweekId;
+          setGameweek(fetchedGameweek);
+
+          // Fetch existing guesses for the user
+          const guessesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/guesses/${fetchedGameweek}`);
+          const userGuesses = guessesResponse.data;
+
+          // Transform the fetched guesses into the expected state shape
+          const transformedGuesses = userGuesses.reduce((acc: any, guess: any) => {
+            acc[guess.matchId] = { homeGoals: guess.homeGoals, awayGoals: guess.awayGoals };
+            return acc;
+          }, {});
+
+          setGuesses(transformedGuesses);
         }
       } catch (error) {
-        console.error('Error fetching matches:', error);
+        console.error('Error fetching matches or guesses:', error);
       } finally {
         setLoadingMatches(false);
       }
     };
 
-    fetchMatches();
+    fetchMatchesAndGuesses();
   }, [dispatch, username]);
 
   useEffect(() => {
@@ -87,21 +103,20 @@ const Home: React.FC = () => {
       }, 1000);
 
       setTimeout(() => {
-        setSaveSuccess(false); // Reset success message after a delay
+        setSaveSuccess(false);
       }, 3000);
 
     } catch (error) {
       console.error('Error saving guesses:', error);
       setSaving(false);
-      setSaveSuccess(false); // Ensure success state is reset on error
+      setSaveSuccess(false);
     }
   };
 
-  
   if (!username || !userId) {
     return <div>Loading user data...</div>;
   }
-  
+
   if (loadingMatches) {
     return <div>Loading matches...</div>;
   }
@@ -127,7 +142,7 @@ const Home: React.FC = () => {
   
     return `${formattedDate} - ${formattedTime}`;
   };
-  
+      
 
   return (
     <div className={styles.container}>
@@ -140,12 +155,11 @@ const Home: React.FC = () => {
         {matches.map((match: any) => {
           const homeTeam = teams[match.homeTeam];
           const awayTeam = teams[match.awayTeam];
-          const formattedKickoffTime = formatKickoffTime(match.kickoffTime);
+          // const formattedKickoffTime = formatKickoffTime(match.kickoffTime);
 
           return (
             <li key={match.id} className={styles.match}>
               {/* <div className={styles.kickoffTime}>{formattedKickoffTime}</div> Display kickoff time */}
-
               <div className={styles.team}>
                 <img
                   src={`${process.env.PUBLIC_URL}/team_logos/${homeTeam.formatted}.png`}
