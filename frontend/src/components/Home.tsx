@@ -6,9 +6,14 @@ import styles from './Home.module.css';
 import teams from '../utils';
 import SyncIcon from './SyncIcon';
 import LockIcon from './LockIcon';
-
+import CountdownTimer from './CountdownTimer';
 
 // TODO: fix issue where if a guess exists (if (completeGuesses.length === 0) is falsy), then any other input we fill triggers the sync icon, when it should only be triggered if a certain match has both home AND away guesses put. The actual guess is not saved with only half of the guess. It's just the sync icon animation that should not work as well.
+
+const ONE_HOUR_IN_MS = 60 * 60 * 1000;
+const SAVE_GUESSES_FREQUENCY_MS = 1500;
+const SAVE_GUESSES_IDLE_WAIT_MS = 1000;
+const SAVE_GUESSES_SAVING_ANIMATION_DURATION_MS = 3000;
 
 const Home: React.FC = () => {
   const [groupedMatches, setGroupedMatches] = useState<{ [key: string]: any[] }>({});
@@ -17,7 +22,8 @@ const Home: React.FC = () => {
   const [guesses, setGuesses] = useState<{ [key: number]: { homeGoals: number | null; awayGoals: number | null } }>({});
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [deadlinePassed, setDeadlinePassed] = useState(false); // New state to check if deadline has passed
+  const [deadline, setDeadline] = useState<Date | null>(null);
+  const [deadlinePassed, setDeadlinePassed] = useState(false);
 
   const username = useSelector((state: RootState) => state.user.username);
   const userId = useSelector((state: RootState) => state.user.id);
@@ -38,6 +44,7 @@ const Home: React.FC = () => {
     };
     const formattedDate = date.toLocaleDateString('en-GB', optionsDate);
     const formattedTime = date.toLocaleTimeString('en-GB', optionsTime);
+    
     return `${formattedDate} - ${formattedTime}`;
   };
 
@@ -47,11 +54,11 @@ const Home: React.FC = () => {
         const matchesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
         const upcomingMatches = matchesResponse.data;
 
-        // Determine if the deadline has passed
+        // Determine the deadline
         const firstKickoffTime = new Date(upcomingMatches[0].matches[0].kickoffTime);
-        const deadline = new Date(firstKickoffTime.getTime() - 60 * 60 * 1000); // 1 hour before kickoff
-        console.log({deadline, passed: new Date() > deadline});
+        const deadline = new Date(firstKickoffTime.getTime() - ONE_HOUR_IN_MS); // 1 hour before first kickoff
         
+        setDeadline(deadline);
         setDeadlinePassed(new Date() > deadline);
 
         const groupedMatches = upcomingMatches.reduce((acc: any, matchGroup: any) => {
@@ -59,7 +66,9 @@ const Home: React.FC = () => {
           if (!acc[formattedKickoffTime]) {
             acc[formattedKickoffTime] = [];
           }
+          
           acc[formattedKickoffTime].push(...matchGroup.matches);
+          
           return acc;
         }, {});
         
@@ -92,7 +101,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       saveGuessesToDB();
-    }, 1500);
+    }, SAVE_GUESSES_FREQUENCY_MS);
 
     return () => clearTimeout(timer);
   }, [guesses]);
@@ -131,11 +140,11 @@ const Home: React.FC = () => {
       
       setTimeout(() => {
         setSaving(false);
-      }, 1000);
+      }, SAVE_GUESSES_IDLE_WAIT_MS);
 
       setTimeout(() => {
         setSaveSuccess(false);
-      }, 3000);
+      }, SAVE_GUESSES_SAVING_ANIMATION_DURATION_MS);
 
     } catch (error) {
       console.error('Error saving guesses:', error);
@@ -157,7 +166,10 @@ const Home: React.FC = () => {
       <h2 className={styles.h2}>
         Upcoming Matches - GW {gameweek} {deadlinePassed && <LockIcon />}
       </h2>
-      <h4 className={styles.h4}>{process.env.REACT_APP_ACTIVE_SEASON}</h4>
+      <div className={styles.header}>
+        <CountdownTimer deadline={deadline!}/>
+        <h4 className={styles.h4}>{process.env.REACT_APP_ACTIVE_SEASON}</h4>
+      </div>
 
       <SyncIcon saving={saving} success={saveSuccess} />
 

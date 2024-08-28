@@ -45,15 +45,25 @@
   color: #757575;
 }
 
-
 /* Styling for h4 */
 .h4 {
   font-size: 16px; /* Slightly smaller font size for h4 */
   font-weight: normal; /* Normal weight */
   color: #607d8b; /* Softer color for h4 */
-  margin-top: 0; /* Ensure h4 is close to h2 */
-  margin-bottom: 8px; /* Small margin below h4 */
+  margin: 0; /* Ensure h4 is close to h2 */
   font-family: 'Helvetica Neue', Arial, sans-serif; /* Matching font family */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between; /* Space out children elements */
+  align-items: center; /* Align items vertically center */
+  width: 100%;
+}
+
+.header::after {
+  flex: 1;
+  content: '';
 }
 
 .container {
