@@ -12,6 +12,7 @@ class Match extends Model {
   public homeTeam!: string;
   public awayTeam!: string;
   public kickoffTime!: Date;
+  public matchId!: number;
 }
 
 // Initialize the model
@@ -45,11 +46,21 @@ Match.init(
     kickoffTime: {
       type: DataTypes.DATE,
       allowNull: false,
+    },
+    matchId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     }
   },
   {
     sequelize,
     modelName: 'Match',
+    indexes: [
+      {
+        unique: true,
+        fields: ['matchId']  // Create an index on matchId
+      }
+    ]
   }
 );
 

@@ -1,4 +1,6 @@
-`psql -h 127.0.0.1 -U ohad -d betcha`
+- Connect to the app DB: `psql -h 127.0.0.1 -U ohad -d betcha`
+
+- Generate a new migration file `npx sequelize-cli migration:generate --name [migration-file-name]`
 
 
 # Getting Started with Create React App

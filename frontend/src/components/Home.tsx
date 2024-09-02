@@ -19,7 +19,7 @@ const Home: React.FC = () => {
   const [groupedMatches, setGroupedMatches] = useState<{ [key: string]: any[] }>({});
   const [loadingMatches, setLoadingMatches] = useState(true);
   const [gameweek, setGameweek] = useState<number | null>(null);
-  const [guesses, setGuesses] = useState<{ [key: number]: { homeGoals: number | null; awayGoals: number | null } }>({});
+  const [guesses, setGuesses] = useState<{ [key: number]: { homeGoals: number | null; awayGoals: number | null, correctDirection: boolean,  exact: boolean } }>({});
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [deadline, setDeadline] = useState<Date | null>(null);
@@ -54,7 +54,6 @@ const Home: React.FC = () => {
         const matchesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/matches/upcoming`);
         const upcomingMatches = matchesResponse.data;
 
-        // Determine the deadline
         const firstKickoffTime = new Date(upcomingMatches[0].matches[0].kickoffTime);
         const deadline = new Date(firstKickoffTime.getTime() - ONE_HOUR_IN_MS); // 1 hour before first kickoff
         
@@ -82,9 +81,14 @@ const Home: React.FC = () => {
           const userGuesses = guessesResponse.data;
 
           const transformedGuesses = userGuesses.reduce((acc: any, guess: any) => {
-            acc[guess.matchId] = { homeGoals: guess.homeGoals, awayGoals: guess.awayGoals };
+            acc[guess.matchId] = {
+              homeGoals: guess.homeGoals,
+              awayGoals: guess.awayGoals,
+              correctDirection: guess.correctDirection,
+              exact: guess.exact,
+            };
             return acc;
-          }, {});
+          }, {});          
     
           setGuesses(transformedGuesses);
         }
@@ -109,7 +113,11 @@ const Home: React.FC = () => {
   const handleGuessChange = (matchId: number, homeGoals: number | null, awayGoals: number | null) => {
     setGuesses((prevGuesses) => ({
       ...prevGuesses,
-      [matchId]: { homeGoals, awayGoals },
+      [matchId]: { 
+        ...prevGuesses[matchId],
+        homeGoals, 
+        awayGoals 
+      },
     }));
   };
 
@@ -181,13 +189,19 @@ const Home: React.FC = () => {
               const homeTeam = teams[match.homeTeam];
               const awayTeam = teams[match.awayTeam];
 
+              const matchGuess = guesses[match.id] || {};
+
+              const { homeGoals, awayGoals, correctDirection, exact } = matchGuess;
+
+              const borderStyle = exact
+                ? styles.exactBorder
+                : correctDirection
+                ? styles.correctDirectionBorder
+                : '';                
+
               return (
-                <li key={match.id} className={styles.match} style={{ 
-                  opacity: deadlinePassed ? 0.5 : 1 
-                }}>
-                  <div className={styles.team} style={{ 
-                    color: deadlinePassed ? '#b0bec5' : '#37474f' 
-                  }}>
+                <li key={match.id} className={`${styles.match} ${borderStyle}`} style={{ opacity: deadlinePassed ? 0.5 : 1 }}>
+                  <div className={styles.team} style={{ color: deadlinePassed ? '#b0bec5' : '#37474f' }}>
                     <img
                       src={`${process.env.PUBLIC_URL}/team_logos/${homeTeam.formatted}.png`}
                       alt={homeTeam.name}
@@ -199,26 +213,32 @@ const Home: React.FC = () => {
                     type="number"
                     placeholder="-"
                     className={styles.input}
-                    value={guesses[match.id]?.homeGoals ?? ''}
+                    value={homeGoals ?? ''}
                     onChange={(e) =>
-                      handleGuessChange(match.id, e.target.value === '' ? null : parseInt(e.target.value), guesses[match.id]?.awayGoals ?? null)
+                      handleGuessChange(
+                        match.id,
+                        e.target.value === '' ? null : parseInt(e.target.value),
+                        awayGoals ?? null
+                      )
                     }
-                    disabled={deadlinePassed} // Disable input if deadline has passed
+                    disabled={deadlinePassed}
                   />
                   <span className={styles.colon}>:</span>
                   <input
                     type="number"
                     placeholder="-"
                     className={styles.input}
-                    value={guesses[match.id]?.awayGoals ?? ''}
+                    value={awayGoals ?? ''}
                     onChange={(e) =>
-                      handleGuessChange(match.id, guesses[match.id]?.homeGoals ?? null, e.target.value === '' ? null : parseInt(e.target.value))
+                      handleGuessChange(
+                        match.id,
+                        homeGoals ?? null,
+                        e.target.value === '' ? null : parseInt(e.target.value)
+                      )
                     }
-                    disabled={deadlinePassed} // Disable input if deadline has passed
+                    disabled={deadlinePassed}
                   />
-                  <div className={styles.team} style={{ 
-                    color: deadlinePassed ? '#b0bec5' : '#37474f' 
-                  }}>
+                  <div className={styles.team} style={{ color: deadlinePassed ? '#b0bec5' : '#37474f' }}>
                     <span className={styles.name}>{awayTeam.shortcut}</span>
                     <img
                       src={`${process.env.PUBLIC_URL}/team_logos/${awayTeam.formatted}.png`}

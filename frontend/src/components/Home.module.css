@@ -158,3 +158,13 @@
   font-weight: bold;
   color: #37474f;
 }
+
+/* Exact guess border (e.g., green border) */
+.exactBorder {
+  border: 2px solid #01a016; /* Orange for exact guess */
+}
+
+/* Correct direction guess border (e.g., orange-yellow border) */
+.correctDirectionBorder {
+  border: 2px solid #d3c223; /* Yellow for correct direction */
+}
