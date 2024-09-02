@@ -14,11 +14,11 @@ Match.belongsTo(Gameweek, { foreignKey: 'gameweekId', as: 'Gameweek' });
 Match.hasMany(Guess, { foreignKey: 'matchId', as: 'Guesses' });
 Guess.belongsTo(Match, { foreignKey: 'matchId', as: 'Match' });
 
-// Export all models
-export { User, Guess, Gameweek, Match };
-
 // Import models to ensure they are registered
 import './user';
 import './guess';
 import './gameweek';
 import './match';
+
+// Export all models
+export { User, Guess, Gameweek, Match };

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import styles from './ThisGameweek.module.css';
 
 interface GameweekStats {
   username: string;
@@ -16,7 +17,10 @@ const ThisGameweek: React.FC = () => {
     const fetchGameweekStats = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/gameweek/current`);
-        setGameweekStats(response.data);
+        const statsData = response.data;
+
+        const sortedStats = statsData.sort((a: GameweekStats, b: GameweekStats) => b.totalPoints - a.totalPoints);
+        setGameweekStats(sortedStats);
       } catch (error) {
         console.error('Error fetching gameweek stats:', error);
       } finally {
@@ -32,7 +36,7 @@ const ThisGameweek: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2>Current Gameweek Standings</h2>
       <table>
         <thead>
@@ -45,7 +49,7 @@ const ThisGameweek: React.FC = () => {
         </thead>
         <tbody>
           {gameweekStats.map((stats, index) => (
-            <tr key={index}>
+            <tr key={index} className={index === 0 ? styles['leader-row'] : ''}>
               <td>{stats.username}</td>
               <td>{stats.exactGuesses}</td>
               <td>{stats.directionGuesses}</td>

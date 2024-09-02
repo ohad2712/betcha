@@ -2,7 +2,9 @@ import { Router } from 'express';
 import { Guess } from '../models/guess';
 import { User } from '../models/user';
 import { Match } from '../models/match';
+import { Gameweek } from '../models/gameweek';
 import { authenticate } from '../middleware/authenticate';
+import { getLatestActiveGameweek } from '../utils';
 
 const router = Router();
 
@@ -73,18 +75,25 @@ router.get('/stats', authenticate, async (req, res) => {
 
 router.get('/current', authenticate, async (req, res) => {
   try {
-    const currentGameweek = 'current_gameweek'; // This should be dynamic in a real application
+    const currentGameweek = await getLatestActiveGameweek();
 
+    // Fetch guesses with associated User and Match
     const guesses = await Guess.findAll({
       include: [
         {
           model: User,
-          as: 'User',
+          as: 'User', // Ensure this matches the 'as' defined in your association
         },
         {
           model: Match,
-          as: 'Match',
-          where: { gameweek: Number(currentGameweek) },
+          as: 'Match', // Ensure this matches the 'as' defined in your association
+          include: [
+            {
+              model: Gameweek,
+              as: 'Gameweek', // Ensure this matches the 'as' defined in your association
+              where: { id: Number(currentGameweek) },
+            },
+          ],
         },
       ],
     }) as GuessWithMatch[];
@@ -117,6 +126,18 @@ router.get('/current', authenticate, async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error('Error fetching current gameweek stats:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+// TODO: if this endpoint will be used, extract /current/... to another router and have "/" and "/number"
+router.get('/current/number', authenticate, async (req, res) => {
+  try {
+    const latestActiveGameweek = await getLatestActiveGameweek();
+
+    res.json(latestActiveGameweek);
+  } catch (error) {
+    console.error('Error fetching the current active gameweek number:', error);
     res.status(500).json({ error: 'An error occurred' });
   }
 });
