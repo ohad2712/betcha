@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import styles from './ThisGameweek.module.css';
+import styles from './Table.module.css';
 
 interface GameweekStats {
   username: string;

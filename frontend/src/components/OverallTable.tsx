@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+import styles from './Table.module.css';
+
 interface SeasonStats {
   username: string;
   exactGuesses: number;
@@ -16,7 +18,7 @@ const OverallTable: React.FC = () => {
     const fetchSeasonStats = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/season/standings`);
-        setSeasonStats(response.data);
+        setSeasonStats(response.data);        
       } catch (error) {
         console.error('Error fetching season stats:', error);
       } finally {
@@ -32,7 +34,7 @@ const OverallTable: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2>Season Standings</h2>
       <table>
         <thead>
@@ -45,7 +47,7 @@ const OverallTable: React.FC = () => {
         </thead>
         <tbody>
           {seasonStats.map((stats, index) => (
-            <tr key={index}>
+            <tr key={index} className={index === 0 ? styles['leader-row'] : ''}>
               <td>{stats.username}</td>
               <td>{stats.exactGuesses}</td>
               <td>{stats.directionGuesses}</td>

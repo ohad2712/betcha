@@ -6,7 +6,7 @@ import cron from 'node-cron';
 import { Match } from '../models/match';
 import { authenticate } from '../middleware/authenticate';
 import { Guess } from '../models/guess';
-import { getLatestActiveGameweek } from '../utils';
+import { getLatestActiveGameweekId } from '../utils';
 
 const router = Router();
 
@@ -15,7 +15,7 @@ const router = Router();
 router.get('/upcoming', authenticate, async (req, res) => {
   try {
     const userId = req.user?.id!;
-    const gameweekId = await getLatestActiveGameweek();
+    const gameweekId = await getLatestActiveGameweekId();
 
     if (!gameweekId) {
       return res.status(500).json({ error: 'Failed to retrieve the latest active gameweek' });

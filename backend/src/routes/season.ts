@@ -5,7 +5,8 @@ import { authenticate } from '../middleware/authenticate';
 import { User } from '../models/user';
 import { Match } from '../models/match';
 import { Gameweek } from '../models/gameweek';
-import { Op } from 'sequelize';
+import { sequelize } from '../db';
+import { getLatestActiveGameweekId } from '../utils';
 
 const router = Router();
 
@@ -16,78 +17,48 @@ interface UserStats {
 }
 
 // Define an interface to include Match in Guess
-interface GuessWithMatch extends Guess {
+interface GuessWithUser extends Guess {
   Match: Match;
   User: User;
 }
 
-router.get('/stats', authenticate, async (req, res) => {
+router.get('/standings', authenticate, async (req, res) => {
   try {
-    // Fetch the latest season year
-    const latestGameweek = await Gameweek.findOne({
-      order: [['seasonYear', 'DESC']],
-    });
+    // const currentGameweek = await getLatestActiveGameweekId();
+    const currentGameweek = 3; // TODO: remove this line after tests
 
-    if (!latestGameweek) {
-      return res.status(404).json({ error: 'No gameweek data found' });
-    }
-
-    const latestSeasonYear = latestGameweek.seasonYear;
-
-    // Fetch all gameweeks for the latest season year
-    const gameweeks = await Gameweek.findAll({
-      where: { seasonYear: latestSeasonYear },
-    });
-
-    const gameweekIds = gameweeks.map((gw) => gw.id);
-
-    // Fetch all guesses for the latest season year
     const guesses = await Guess.findAll({
+      attributes: [
+        'userId',
+        [sequelize.fn('SUM', sequelize.literal('CASE WHEN exact THEN 1 ELSE 0 END')), 'exactGuesses'],
+        [sequelize.fn('SUM', sequelize.literal('CASE WHEN "correctDirection" THEN 1 ELSE 0 END')), 'directionGuesses'],
+        [sequelize.fn('SUM', sequelize.literal('CASE WHEN exact THEN 3 WHEN "correctDirection" THEN 2 ELSE 0 END')), 'totalPoints']
+      ],
       include: [
         {
           model: User,
           as: 'User',
-        },
-        {
-          model: Match,
-          as: 'Match',
-          where: {
-            gameweekId: {
-              [Op.in]: gameweekIds, // Use the $in operator with the array of gameweekIds
-            },
-          },
-        },
+        }
       ],
-    }) as GuessWithMatch[];
-    
-
-    const stats: Record<number, UserStats> = {};
-
-    guesses.forEach((guess) => {
-      const userId = guess.userId;
-      if (!stats[userId]) {
-        stats[userId] = { exactGuesses: 0, directionGuesses: 0, totalPoints: 0 };
+      group: ['userId', 'User.id'], // Group by userId and User.id
+      where: {
+        gameweekId: Number(currentGameweek)
       }
+    }) as GuessWithUser[];;    
 
-      const matchResult = guess.Match;
-      if (!matchResult) return;
+    const stats = guesses.map(guess => ({
+      username: guess.User ? guess.User.username : 'Unknown User', // Fallback username
+      exactGuesses: Number(guess.getDataValue('exactGuesses')),
+      directionGuesses: Number(guess.getDataValue('directionGuesses')),
+      totalPoints: Number(guess.getDataValue('totalPoints')),
+    }));
 
-      const isExact = guess.homeGoals === matchResult.homeGoals && guess.awayGoals === matchResult.awayGoals;
-      const isDirection = (guess.homeGoals - guess.awayGoals) === (matchResult.homeGoals - matchResult.awayGoals);
+    const result = stats.sort((a, b) => b.totalPoints - a.totalPoints);
 
-      if (isExact) {
-        stats[userId].exactGuesses += 1;
-        stats[userId].totalPoints += 3;
-      } else if (isDirection) {
-        stats[userId].directionGuesses += 1;
-        stats[userId].totalPoints += 2;
-      }
-    });
-
-    res.json(stats);
+    res.json(result);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch season stats' });
+    console.error('Error fetching current gameweek stats:', error);
+    res.status(500).json({ error: 'An error occurred' });
   }
 });
 

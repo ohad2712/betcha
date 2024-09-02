@@ -5,8 +5,6 @@ import { authenticate } from '../middleware/authenticate';
 const router = Router();
 
 router.post('/', authenticate, async (req, res) => {
-  console.log({ guesses: req.body.guesses });
-
   const guesses = req.body.guesses;
   
   // Check if req.user is defined

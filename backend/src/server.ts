@@ -16,6 +16,11 @@ import { User, Guess, Gameweek, Match } from './models'; // Import models
 
 dotenv.config();
 
+console.debug(User.associations);
+console.debug(Guess.associations);
+console.debug(Gameweek.associations);
+console.debug(Match.associations);
+
 const app = express();
 
 // Middleware

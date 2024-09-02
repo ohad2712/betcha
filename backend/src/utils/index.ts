@@ -1,5 +1,5 @@
 // Helper function to get the latest active gameweek ID
-export const getLatestActiveGameweek = async (): Promise<number | null> => {
+export const getLatestActiveGameweekId = async (): Promise<number | null> => {
   // TODO: Change the logic below to instead get the current gw:
   // get("https://v3.football.api-sports.io/fixtures/rounds?league=39&season=2019&current=true");
   // This endpoint gets updated every day, so if all the current gw's matches are over 
@@ -23,6 +23,7 @@ export const getLatestActiveGameweek = async (): Promise<number | null> => {
   //   const latestGameweek = gameweeks.pop(); // Get the latest active gameweek
 
   //   if (latestGameweek) {
+  //     // TODO: add before this return a query for the Gameweeks table to get the gameweek for current year with weekNumber that's equal to parseInt(latestGameweek.match(/\d+/)[0]) to return the id and not just the number.
   //     return parseInt(latestGameweek.match(/\d+/)[0]); // Extract the number from the gameweek string
   //   }
 
