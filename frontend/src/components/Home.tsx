@@ -8,7 +8,7 @@ import SyncIcon from './SyncIcon';
 import LockIcon from './LockIcon';
 import CountdownTimer from './CountdownTimer';
 
-// TODO: fix issue where if a guess exists (if (completeGuesses.length === 0) is falsy), then any other input we fill triggers the sync icon, when it should only be triggered if a certain match has both home AND away guesses put. The actual guess is not saved with only half of the guess. It's just the sync icon animation that should not work as well.
+// TODO(should be fixed now, so ensure before pushing and removing this todo): fix issue where if a guess exists (if (completeGuesses.length === 0) is falsy), then any other input we fill triggers the sync icon, when it should only be triggered if a certain match has both home AND away guesses put. The actual guess is not saved with only half of the guess. It's just the sync icon animation that should not work as well.
 
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 const SAVE_GUESSES_FREQUENCY_MS = 1500;
