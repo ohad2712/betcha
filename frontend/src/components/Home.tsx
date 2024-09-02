@@ -123,43 +123,48 @@ const Home: React.FC = () => {
 
   const saveGuessesToDB = async () => {
     if (!userId) return;
-
+  
+    // Filter for complete guesses
     const completeGuesses = Object.entries(guesses).filter(
       ([, { homeGoals, awayGoals }]) => homeGoals !== null && awayGoals !== null
     );
-
-    if (completeGuesses.length === 0) {
-      return;
-    }
-
-    setSaving(true);
-    try {
-      const guessesObjects = completeGuesses.map(([matchId, { homeGoals, awayGoals }]) => ({
-        userId,
-        matchId: parseInt(matchId),
-        gameweekId: gameweek!,
-        homeGoals,
-        awayGoals,
-      }));
-
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/guesses`, { guesses: guessesObjects });
-      
-      setSaveSuccess(true);
-      
-      setTimeout(() => {
+  
+    // Only proceed if there are complete guesses
+    if (completeGuesses.length > 0) {
+      setSaving(true);
+      try {
+        const guessesObjects = completeGuesses.map(([matchId, { homeGoals, awayGoals }]) => ({
+          userId,
+          matchId: parseInt(matchId),
+          gameweekId: gameweek!,
+          homeGoals,
+          awayGoals,
+        }));
+  
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/guesses`, { guesses: guessesObjects });
+  
+        setSaveSuccess(true);
+        
+        setTimeout(() => {
+          setSaving(false);
+        }, SAVE_GUESSES_IDLE_WAIT_MS);
+  
+        setTimeout(() => {
+          setSaveSuccess(false);
+        }, SAVE_GUESSES_SAVING_ANIMATION_DURATION_MS);
+  
+      } catch (error) {
+        console.error('Error saving guesses:', error);
         setSaving(false);
-      }, SAVE_GUESSES_IDLE_WAIT_MS);
-
-      setTimeout(() => {
         setSaveSuccess(false);
-      }, SAVE_GUESSES_SAVING_ANIMATION_DURATION_MS);
-
-    } catch (error) {
-      console.error('Error saving guesses:', error);
+      }
+    } else {
+      // No complete guesses to save, stop the saving animation
       setSaving(false);
       setSaveSuccess(false);
     }
   };
+  
 
   if (!username || !userId) {
     return <div>Loading user data...</div>;
