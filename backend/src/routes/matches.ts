@@ -10,12 +10,18 @@ import { getLatestActiveGameweekId } from '../utils';
 
 const router = Router();
 
+let the_response: any;
+
+// !!!TODO: Figure out where to upsert the Gameweek record
+
 // TODO: add return type to functions
 
 router.get('/upcoming', authenticate, async (req, res) => {
   try {
     const userId = req.user?.id!;
-    const gameweekId = await getLatestActiveGameweekId();
+    // TODO: check for null
+    const gameweekId = (await getLatestActiveGameweekId())?.id;
+    
 
     if (!gameweekId) {
       return res.status(500).json({ error: 'Failed to retrieve the latest active gameweek' });
@@ -46,272 +52,6 @@ router.get('/upcoming', authenticate, async (req, res) => {
     //   },
     // });
 
-    // const response = {
-    //   "data": {
-    //     "response": [
-    //       {
-    //         "fixture": {
-    //           "id": 111111,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T14:00:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 1,
-    //             "name": "Liverpool",
-    //             "logo": "https://media.api-sports.io/football/teams/1.png",
-    //             "winner": true
-    //           },
-    //           "away": {
-    //             "id": 2,
-    //             "name": "Manchester United",
-    //             "logo": "https://media.api-sports.io/football/teams/2.png",
-    //             "winner": false
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 222222,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T14:00:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 3,
-    //             "name": "Chelsea",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "Arsenal",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 333333,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T14:00:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 4,
-    //             "name": "Aston Villa",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "Wolves",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 444444,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T14:00:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 3,
-    //             "name": "Bournemouth",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "West Ham United",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 555555,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T14:00:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 3,
-    //             "name": "Brighton",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "Tottenham Hotspurs",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 666666,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T14:00:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 3,
-    //             "name": "Crystal Palace",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "Southampton",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 777777,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T14:00:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 3,
-    //             "name": "Everton",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "Nottingham Forest",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 888888,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-07T18:30:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 3,
-    //             "name": "Fulham",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "Newcastle United",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 999999,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T19:30:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 3,
-    //             "name": "Ipswich",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "Manchester City",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //       {
-    //         "fixture": {
-    //           "id": 101101,
-    //           "referee": null,
-    //           "timezone": "UTC",
-    //           "date": "2025-02-06T17:00:00+00:00",
-    //           "timestamp": 1580997600,
-    //           "periods": {},
-    //           "venue": {},
-    //           "status": {}
-    //         },
-    //         "teams": {
-    //           "home": {
-    //             "id": 3,
-    //             "name": "Leicester City",
-    //             "logo": "https://media.api-sports.io/football/teams/3.png",
-    //             "winner": false
-    //           },
-    //           "away": {
-    //             "id": 4,
-    //             "name": "Brentford",
-    //             "logo": "https://media.api-sports.io/football/teams/4.png",
-    //             "winner": true
-    //           }
-    //         }
-    //       },
-    //     ]
-    //   }
-    // };
 
     const now = new Date();            // Get the current date and time
     now.setSeconds(now.getSeconds() + 30); // Add 30 seconds to the current time to allow time to guess before locking the game
@@ -327,6 +67,7 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "referee": null,
               "timezone": "UTC",
               "date": formattedDate,
+              // "date": "2025-02-06T14:00:00+00:00",
               "timestamp": 1580997600,
               "periods": {},
               "venue": {},
@@ -351,10 +92,333 @@ router.get('/upcoming', authenticate, async (req, res) => {
               "away": 0
             },
           },
-          
+          {
+            "fixture": {
+              "id": 222222,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,
+              // "date": "2025-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Chelsea",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Arsenal",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            },
+            "goals": {
+              "home": 2,
+              "away": 0
+            },
+          },
+          {
+            "fixture": {
+              "id": 333333,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,
+              // "date": "2025-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 4,
+                "name": "Aston Villa",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Wolves",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            },
+            "goals": {
+              "home": 3,
+              "away": 1
+            },
+          },
+          {
+            "fixture": {
+              "id": 444444,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,
+              // "date": "2025-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Bournemouth",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "West Ham United",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            },
+            "goals": {
+              "home": 1,
+              "away": 2
+            },
+          },
+          {
+            "fixture": {
+              "id": 555555,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,
+              // "date": "2025-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Brighton",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Tottenham Hotspurs",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            }
+            ,
+            "goals": {
+              "home": 1,
+              "away": 1
+            },
+          },
+          {
+            "fixture": {
+              "id": 666666,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,
+              // "date": "2025-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Crystal Palace",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Southampton",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            },
+            "goals": {
+              "home": 3,
+              "away": 0
+            },
+          },
+          {
+            "fixture": {
+              "id": 777777,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,
+              // "date": "2025-02-06T14:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Everton",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Nottingham Forest",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            },
+            "goals": {
+              "home": 0,
+              "away": 0
+            },
+          },
+          {
+            "fixture": {
+              "id": 888888,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,
+              // "date": "2025-02-07T18:30:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Fulham",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Newcastle United",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            },
+            "goals": {
+              "home": 0,
+              "away": 3
+            },
+          },
+          {
+            "fixture": {
+              "id": 999999,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,              
+              // "date": "2025-02-06T19:30:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Ipswich",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Manchester City",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            },
+            "goals": {
+              "home": 2,
+              "away": 2
+            },
+          },
+          {
+            "fixture": {
+              "id": 101101,
+              "referee": null,
+              "timezone": "UTC",
+              "date": formattedDate,
+              // "date": "2025-02-06T17:00:00+00:00",
+              "timestamp": 1580997600,
+              "periods": {},
+              "venue": {},
+              "status": {}
+            },
+            "teams": {
+              "home": {
+                "id": 3,
+                "name": "Leicester City",
+                "logo": "https://media.api-sports.io/football/teams/3.png",
+                "winner": false
+              },
+              "away": {
+                "id": 4,
+                "name": "Brentford",
+                "logo": "https://media.api-sports.io/football/teams/4.png",
+                "winner": true
+              }
+            },
+            "goals": {
+              "home": 1,
+              "away": 0
+            },
+          },
         ]
       }
     };
+
+    the_response = response;
+    
+    
+    
+    
+    
+    // const response = {
+    //   "data": {
+    //     "response": [
+    //       {
+    //         "fixture": {
+    //           "id": 111111,
+    //           "referee": null,
+    //           "timezone": "UTC",
+    //           "date": formattedDate,
+    //           "timestamp": 1580997600,
+    //           "periods": {},
+    //           "venue": {},
+    //           "status": {}
+    //         },
+    //         "teams": {
+    //           "home": {
+    //             "id": 1,
+    //             "name": "Liverpool",
+    //             "logo": "https://media.api-sports.io/football/teams/1.png",
+    //             "winner": true
+    //           },
+    //           "away": {
+    //             "id": 2,
+    //             "name": "Manchester United",
+    //             "logo": "https://media.api-sports.io/football/teams/2.png",
+    //             "winner": false
+    //           }
+    //         },
+    //         "goals": {
+    //           "home": 7,
+    //           "away": 0
+    //         },
+    //       },
+          
+    //     ]
+    //   }
+    // };
 
     const matchesData = response.data.response;
     
@@ -785,43 +849,47 @@ const getMatchesUpdatedData = async (matches: Match[]) => {
     //   }
     // };
 
-    const response = {
-      "data": {
-        "response": [
-          {
-            "fixture": {
-              "id": 111111,
-              "referee": null,
-              "timezone": "UTC",
-              "date": "...",
-              "timestamp": 1580997600,
-              "periods": {},
-              "venue": {},
-              "status": {}
-            },
-            "teams": {
-              "home": {
-                "id": 1,
-                "name": "Liverpool",
-                "logo": "https://media.api-sports.io/football/teams/1.png",
-                "winner": true
-              },
-              "away": {
-                "id": 2,
-                "name": "Manchester United",
-                "logo": "https://media.api-sports.io/football/teams/2.png",
-                "winner": false
-              }
-            },
-            "goals": {
-              "home": 7,
-              "away": 0
-            },
-          },
+    
+    // This was for testing the one match cronjob and direction/exact logic
+    // const response = {
+    //   "data": {
+    //     "response": [
+    //       {
+    //         "fixture": {
+    //           "id": 111111,
+    //           "referee": null,
+    //           "timezone": "UTC",
+    //           "date": "...",
+    //           "timestamp": 1580997600,
+    //           "periods": {},
+    //           "venue": {},
+    //           "status": {}
+    //         },
+    //         "teams": {
+    //           "home": {
+    //             "id": 1,
+    //             "name": "Liverpool",
+    //             "logo": "https://media.api-sports.io/football/teams/1.png",
+    //             "winner": true
+    //           },
+    //           "away": {
+    //             "id": 2,
+    //             "name": "Manchester United",
+    //             "logo": "https://media.api-sports.io/football/teams/2.png",
+    //             "winner": false
+    //           }
+    //         },
+    //         "goals": {
+    //           "home": 7,
+    //           "away": 0
+    //         },
+    //       },
           
-        ]
-      }
-    };
+    //     ]
+    //   }
+    // };
+
+    const response = the_response;
     
 
     const goalsMap = response.data.response.reduce(
@@ -846,6 +914,8 @@ const updateGuesses = async (
   guessIdentifiers: {userId: number, gameweekId: number },
   actualResult: { homeGoals: number, awayGoals: number }
 ) => {
+  console.log("In updateGuesses", {guessIdentifiers, actualResult});
+  
   try {
     const guess = await Guess.findOne({
       where: {
@@ -855,7 +925,8 @@ const updateGuesses = async (
     });
 
     if (guess) {
-      const guessResult = determineGuessResult(guess, actualResult);      
+      const guessResult = determineGuessResult(guess, actualResult);    
+      console.log({guessResult});
 
       if (guessResult.exact) {
         guess.exact = guessResult.exact
@@ -863,7 +934,12 @@ const updateGuesses = async (
         guess.correctDirection = guessResult.correctDirection;
       }
 
+      console.log({exact: guess.exact, correctDirection: guess.correctDirection});
+      
+
       await guess.save();
+      console.log("Saved guess id = ", guess.id);
+      
     } else {
       console.error(`Guess with identifiers ${guessIdentifiers} not found.`);
     }

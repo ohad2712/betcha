@@ -22,7 +22,10 @@ interface GuessWithMatch extends Guess {
 
 router.get('/current', authenticate, async (req, res) => {
   try {
-    const currentGameweekId = await getLatestActiveGameweekId();
+    // TODO: check for null
+    const currentGameweekId = (await getLatestActiveGameweekId())?.id;
+    console.log("In /gameweek/current", {currentGameweekId});
+    
 
     // Fetch guesses with associated User and Match
     const guesses = await Guess.findAll({
@@ -47,7 +50,7 @@ router.get('/current', authenticate, async (req, res) => {
 
     const stats: { [userId: number]: { username: string; exactGuesses: number; directionGuesses: number; totalPoints: number } } = {};
 
-    for (const guess of guesses) {
+    for (const guess of guesses) {      
       const userId = guess.userId;
       if (!stats[userId]) {
         const username = guess.User ? guess.User.username : 'Unknown User'; // Fallback username
@@ -70,6 +73,8 @@ router.get('/current', authenticate, async (req, res) => {
 
     const result = Object.values(stats).sort((a, b) => b.totalPoints - a.totalPoints);
 
+    console.log({result});
+    
     res.json(result);
   } catch (error) {
     console.error('Error fetching current gameweek stats:', error);
@@ -78,11 +83,16 @@ router.get('/current', authenticate, async (req, res) => {
 });
 
 // TODO: if this endpoint will be used, extract /current/... to another router and have "/" and "/number"
-router.get('/current/id', authenticate, async (req, res) => {
+router.get('/:gameweekId/week-number', authenticate, async (req, res) => {
   try {
-    const latestActiveGameweekId = await getLatestActiveGameweekId();
+    const latestActiveGameweek = await getLatestActiveGameweekId();
 
-    res.json(latestActiveGameweekId);
+    console.log("In /week-number after having ", {latestActiveGameweek});
+
+    console.log("Replying back with", latestActiveGameweek?.weekNumber);
+    
+    // TODO: check for null
+    res.json(latestActiveGameweek?.weekNumber);
   } catch (error) {
     console.error('Error fetching the current active gameweek number:', error);
     res.status(500).json({ error: 'An error occurred' });

@@ -2,6 +2,8 @@
 
 - Generate a new migration file `npx sequelize-cli migration:generate --name [migration-file-name]`
 
+- API is here: https://www.api-football.com/documentation-v3
+
 
 # Getting Started with Create React App
 

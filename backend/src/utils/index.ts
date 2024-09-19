@@ -1,5 +1,7 @@
+import { Gameweek } from "../models/gameweek";
+
 // Helper function to get the latest active gameweek ID
-export const getLatestActiveGameweekId = async (): Promise<number | null> => {
+export const getLatestActiveGameweekId = async () => {
   // TODO: Change the logic below to instead get the current gw:
   // get("https://v3.football.api-sports.io/fixtures/rounds?league=39&season=2019&current=true");
   // This endpoint gets updated every day, so if all the current gw's matches are over 
@@ -33,5 +35,32 @@ export const getLatestActiveGameweekId = async (): Promise<number | null> => {
   //   return null;
   // }
 
-  return 1;
+  console.log("In getLatestActiveGameweekId");
+  
+  const latestGameweekNumber = 1;
+  // TODO: add insert/update to the DB of the gameweekId, and return its id
+  const [currentGameweek, _]= await Gameweek.upsert(
+    {
+      seasonYear: Number(process.env.SEASON),
+      weekNumber: latestGameweekNumber,
+    },
+    {
+      returning: true, // Ensures that the instance is returned
+      conflictFields: ['seasonYear', 'weekNumber'], // Specify the conflict fields
+    }
+  );
+
+  if (!currentGameweek) {
+    console.error(
+      "Failed to upsert gameweek", 
+      { seasonYear: Number(process.env.SEASON), weekNumber: latestGameweekNumber }
+    );
+
+    return { id: null, weekNumber: null };
+  }
+
+  console.log("Returning " + currentGameweek.id);
+  
+
+  return { id: currentGameweek.id, weekNumber: currentGameweek.weekNumber } ;
 };

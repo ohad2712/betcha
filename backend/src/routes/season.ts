@@ -24,8 +24,8 @@ interface GuessWithUser extends Guess {
 
 router.get('/standings', authenticate, async (req, res) => {
   try {
-    // const currentGameweek = await getLatestActiveGameweekId();
-    const currentGameweek = 3; // TODO: remove this line after tests
+    // TODO: handle null
+    const currentGameweek = (await getLatestActiveGameweekId())?.id;
 
     const guesses = await Guess.findAll({
       attributes: [
@@ -44,7 +44,7 @@ router.get('/standings', authenticate, async (req, res) => {
       where: {
         gameweekId: Number(currentGameweek)
       }
-    }) as GuessWithUser[];;    
+    }) as GuessWithUser[];;       
 
     const stats = guesses.map(guess => ({
       username: guess.User ? guess.User.username : 'Unknown User', // Fallback username
@@ -52,6 +52,9 @@ router.get('/standings', authenticate, async (req, res) => {
       directionGuesses: Number(guess.getDataValue('directionGuesses')),
       totalPoints: Number(guess.getDataValue('totalPoints')),
     }));
+
+    console.log({stats});
+    
 
     const result = stats.sort((a, b) => b.totalPoints - a.totalPoints);
 

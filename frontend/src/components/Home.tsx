@@ -10,6 +10,11 @@ import CountdownTimer from './CountdownTimer';
 
 // TODO(should be fixed now, so ensure before pushing and removing this todo): fix issue where if a guess exists (if (completeGuesses.length === 0) is falsy), then any other input we fill triggers the sync icon, when it should only be triggered if a certain match has both home AND away guesses put. The actual guess is not saved with only half of the guess. It's just the sync icon animation that should not work as well.
 
+
+// TODO: check for locked guesses all the time and disable them in real time without needing to refresh the page
+
+// TODO: need to show the entire guesses table for all contestants once deadline is locked. Need to think it through.
+
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 const SAVE_GUESSES_FREQUENCY_MS = 1500;
 const SAVE_GUESSES_IDLE_WAIT_MS = 1000;
@@ -18,7 +23,8 @@ const SAVE_GUESSES_SAVING_ANIMATION_DURATION_MS = 3000;
 const Home: React.FC = () => {
   const [groupedMatches, setGroupedMatches] = useState<{ [key: string]: any[] }>({});
   const [loadingMatches, setLoadingMatches] = useState(true);
-  const [gameweek, setGameweek] = useState<number | null>(null);
+  const [gameweekNumber, setGameweekNumber] = useState<number | null>(null);
+  const [gameweekId, setGameweekId] = useState<number | null>(null);
   const [guesses, setGuesses] = useState<{ [key: number]: { homeGoals: number | null; awayGoals: number | null, correctDirection: boolean,  exact: boolean } }>({});
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -48,6 +54,24 @@ const Home: React.FC = () => {
     return `${formattedDate} - ${formattedTime}`;
   };
 
+  const getGameweekNumber = async (fetchedGameweek: any) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/gameweek/${fetchedGameweek}/week-number`);
+        
+      if (response.status === 200) {
+        
+        const weekNumber = response.data; // Extract weekNumber from the response data
+        return weekNumber;
+      } else {
+        console.error('Failed to fetch gameweek number', response);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching the gameweek number:', error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchMatchesAndGuesses = async () => {
       try {
@@ -75,7 +99,11 @@ const Home: React.FC = () => {
 
         if (upcomingMatches.length > 0) {
           const fetchedGameweek = upcomingMatches[0].matches[0].gameweekId;
-          setGameweek(fetchedGameweek);
+          setGameweekId(fetchedGameweek);
+
+          const gameweekNumber = await getGameweekNumber(fetchedGameweek);
+
+          setGameweekNumber(gameweekNumber);
 
           const guessesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/guesses/${fetchedGameweek}`);
           const userGuesses = guessesResponse.data;
@@ -136,7 +164,7 @@ const Home: React.FC = () => {
         const guessesObjects = completeGuesses.map(([matchId, { homeGoals, awayGoals }]) => ({
           userId,
           matchId: parseInt(matchId),
-          gameweekId: gameweek!,
+          gameweekId: gameweekId!,
           homeGoals,
           awayGoals,
         }));
@@ -177,7 +205,7 @@ const Home: React.FC = () => {
   return (
     <div className={styles.container}>
       <h2 className={styles.h2}>
-        Upcoming Matches - GW {gameweek} {deadlinePassed && <LockIcon />}
+        Upcoming Matches - GW {gameweekNumber} {deadlinePassed && <LockIcon />}
       </h2>
       <div className={styles.header}>
         <CountdownTimer deadline={deadline!}/>
